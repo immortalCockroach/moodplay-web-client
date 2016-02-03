@@ -1,0 +1,14 @@
+data/cherrypy/mood.conf.i
+data/alertify.core.css.i
+data/meta.css.i
+data/jquery.js.i
+data/help.html.i
+data/alertify.default.css.i
+data/index.html.i
+data/endpoint-query/setup.py.i
+data/button.css.i
+data/endpoint-query/endpoint_query.py.i
+data/cherrypy/moodservice.py.i
+data/alertify.min.js.i
+data/moodplay.js.i
+data/alertify.js.i
