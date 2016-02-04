@@ -255,20 +255,21 @@
           Application.showMetadata(title, artist);
       },
 
-      /*      onMouseUp: function(event) {
-                //    if(!start)
-                //    return;
-                if (!clicked)
-                    clicked = true;
-                //if ((new Date() - this.lastClick) > 1000) {
-                this.setMarker(event);
-                this.xclick = event.pageX;
-                this.yclick = event.pageY;
-                //this.sendPosition(event);
-                //this.draw();
-                //this.lastClick = new Date();
-                //}
-            },*/
+      onMouseUp: function(x, y) {
+          //    if(!start)
+          //    return;
+          if (!clicked)
+              clicked = true;
+          //if ((new Date() - this.lastClick) > 1000) {
+          this.setMarker(x, y);
+          this.xclick = x;
+          this.yclick = y;
+          //this.sendPosition(event);
+          //this.draw();
+          //this.lastClick = new Date();
+          //}
+      },
+
 
       sendSPARQLQuery: function(event) {
           if (!clicked)
@@ -288,18 +289,19 @@
           return (val - inmin) / (inmax - inmin) * (outmax - outmin) + outmin;
       },
 
-      setMarker: function(event) {
+      setMarker: function(pX, pY) {
           this.marker = {
-              x: event.pageX,
-              y: event.pageY,
+              x: pX,
+              y: pY,
               title: 'null'
           };
 
-          var x = event.pageX / this.cw;
-          var y = 1 - event.pageY / this.ch;
+          var x = pX / this.cw;
+          var y = 1 - pY / this.ch;
 
           this.label.innerHTML = 'Click to send';
           this.marker.title = this.findMood(x, y);
+          alert(this.marker.title);
       },
 
       findMood: function(x, y) {
@@ -414,7 +416,7 @@
       var split = 10;
       var tool = new Tool();
       var path;
-          // Define a mousedown and mousedrag handler
+      // Define a mousedown and mousedrag handler
 
       /*    var textItem = new PointText({
               content: 'Click and drag to draw a line.',
@@ -461,10 +463,13 @@
           // Select the path, so we can see its segments:
           path.fullySelected = true;
 
-          /*        var array = path.segments;
-                  for (var i = 0; i <= array.length - 1; i++) {
-                      alert("x:" + array[i].point.x / cw + ",y:" + array[i].point.y / ch);
-                  }*/
+          var array = path.segments;
+          var arrlen = array.length;
+          alert(arrlen);
+          for (var i = 0; i <= arrlen - 1; i++) {
+              var pointOfSeg = array[i].point;
+              Application.onMouseUp(pointOfSeg.x,pointOfSeg.y);
+          }
           /*var newSegmentCount = path.segments.length;
           var difference = segmentCount - newSegmentCount;
           var percentage = 100 - Math.round(newSegmentCount / segmentCount * 100);
