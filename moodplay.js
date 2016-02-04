@@ -209,7 +209,12 @@
           //      ctx.restore();
           //    }
       },
-
+      drawCircle: function(x, y, text,circleArray,textArray) {
+          var myCircle = new Path.Circle(new Point(x, y), 20);
+          myCircle.fillColor = 'black';
+          myCircle.opacity=0.5;
+          circleArray.push(myCircle);
+      },
       sendRequest: function(uri, callback) {
           var request = new XMLHttpRequest();
           request.open('GET', uri, true);
@@ -255,7 +260,7 @@
           Application.showMetadata(title, artist);
       },
 
-      onMouseUp: function(x, y) {
+      onMouseUp: function(x, y,circleArray,textArray) {
           //    if(!start)
           //    return;
           if (!clicked)
@@ -264,6 +269,8 @@
           this.setMarker(x, y);
           this.xclick = x;
           this.yclick = y;
+
+          this.drawCircle(x, y, this.marker.title,circleArray,textArray);
           //this.sendPosition(event);
           //this.draw();
           //this.lastClick = new Date();
@@ -301,7 +308,6 @@
 
           this.label.innerHTML = 'Click to send';
           this.marker.title = this.findMood(x, y);
-          alert(this.marker.title);
       },
 
       findMood: function(x, y) {
@@ -416,6 +422,8 @@
       var split = 10;
       var tool = new Tool();
       var path;
+      var circleArray=[];
+      var textArray=[];
       // Define a mousedown and mousedrag handler
 
       /*    var textItem = new PointText({
@@ -429,6 +437,13 @@
               if (path) {
                   path.selected = false;
                   path.remove();
+                  var circleArrayLength=circleArray.length;
+                  for(var j=0;j<=circleArrayLength-1;j++){
+                    circleArray[j].remove();
+
+                  }
+                  circleArray=[];
+                  textArray=[];
               }
 
               // Create a new path and set its stroke color to black:
@@ -465,10 +480,9 @@
 
           var array = path.segments;
           var arrlen = array.length;
-          alert(arrlen);
           for (var i = 0; i <= arrlen - 1; i++) {
               var pointOfSeg = array[i].point;
-              Application.onMouseUp(pointOfSeg.x,pointOfSeg.y);
+              Application.onMouseUp(pointOfSeg.x, pointOfSeg.y,circleArray,textArray);
           }
           /*var newSegmentCount = path.segments.length;
           var difference = segmentCount - newSegmentCount;
