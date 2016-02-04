@@ -24,7 +24,7 @@
   var fadeTime = 5;
   var offset = 30;
   var duration = 60;
-
+  paper.install(window);
   var Application = {
       moods: [
           ['pathetic', 0.12, 0.27, 0, 0],
@@ -72,7 +72,7 @@
           this.is_touch_device = 'ontouchstart' in document.documentElement;
           this.canvas = document.getElementById('canvas');
           cw = document.documentElement.clientWidth;
-          ch = document.documentElement.clientHeight - 82;
+          ch = parseInt(document.documentElement.clientHeight * 0.8);
           this.canvas.width = cw;
           this.canvas.height = ch;
           this.label = document.getElementById('label');
@@ -84,13 +84,13 @@
           }
 
           if (this.is_touch_device) {
-              this.canvas.addEventListener('touchstart', function(event) {
-                  Application.onMouseUp(event.targetTouches[0]);
-              });
+              /*             this.canvas.addEventListener('touchstart', function(event) {
+                               Application.onMouseUp(event.targetTouches[0]);
+                           });*/
           } else {
-              this.canvas.addEventListener('click', function(event) {
-                  Application.onMouseUp(event);
-              });
+              /*              this.canvas.addEventListener('click', function(event) {
+                                Application.onMouseUp(event);
+                            });*/
           }
 
           var uri = MOOD_URI + LIMITS_SERVICE + "?configNumber=" + configNumber;
@@ -139,26 +139,30 @@
       },
 
       draw: function() {
+          alert('start draw');
           var xstep = cw / 50;
           var ystep = ch / 50;
-          var ctx = this.canvas.getContext("2d");
-          ctx.clearRect(0, 0, cw, ch);
+         // var ctx = this.canvas.getContext("2d");
+          paper.setup('canvas')
+          //ctx.clearRect(0, 0, cw, ch);
 
-          var list = [];
-
+          //var list = [];
           for (var y = 0; y < ch; y += ystep) {
               var left = this.interpolateColor(this.tl, this.bl, y / ch);
               var right = this.interpolateColor(this.tr, this.br, y / ch);
               for (var x = 0; x < cw; x += xstep) {
                   var color = this.interpolateColor(left, right, x / cw);
-                  ctx.fillStyle = "rgb(" + color.r + "," + color.g + "," + color.b + ")";
-                  ctx.fillRect(x, y, xstep + 1, ystep + 1);
+                  /*ctx.fillStyle = "rgb(" + color.r + "," + color.g + "," + color.b + ")";
+                  ctx.fillRect(x, y, xstep + 1, ystep + 1);*/
+                  var rectangle = new Rectangle(new Point(x, y), new Size(xstep + 1, ystep + 1));
+                  var pathr = new Path.Rectangle(rectangle);
+                  pathr.fillColor = new Color(color.r/256, color.g/256, color.b/256);
               }
           }
 
 
-
           if (this.marker) {
+              alert('marker')
               ctx.fillStyle = "rgba(0, 0, 0, 0.5)";
               ctx.beginPath();
               ctx.arc(this.marker.x, this.marker.y, 20, 0, Math.PI * 2, true);
