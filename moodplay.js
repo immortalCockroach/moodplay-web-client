@@ -1,13 +1,13 @@
   //client width & client height
-  var cw;
-  var ch;
+  /*  var cw;
+    var ch;*/
   //var start = false;
   var clicked = false;
   //
-  var xclick;
-  var yclick;
+  /*  var xclick;
+    var yclick;*/
 
-  var textLength;
+  //var this.textLength;
 
   var limits;
 
@@ -24,7 +24,7 @@
   var fadeTime = 5;
   var offset = 30;
   var duration = 60;
-  var split = 10;
+
   paper.install(window);
   var Application = {
       moods: [
@@ -68,14 +68,13 @@
           ['happy', 0.92, 0.52, 0, 0],
           ['upbeat', 0.91, 0.55, 0, 0]
       ],
-
       init: function() {
           this.is_touch_device = 'ontouchstart' in document.documentElement;
           this.canvas = document.getElementById('canvas');
-          cw = document.documentElement.clientWidth;
-          ch = parseInt(document.documentElement.clientHeight * 0.8);
-          this.canvas.width = cw;
-          this.canvas.height = ch;
+          this.cw = document.documentElement.clientWidth;
+          this.ch = parseInt(document.documentElement.clientHeight * 0.8);
+          this.canvas.width = this.cw;
+          this.canvas.height = this.ch;
           this.label = document.getElementById('label');
           this.draw();
           this.lastClick = new Date();
@@ -90,9 +89,9 @@
                             });*/
 
           } else {
-              this.canvas.addEventListener('click', function(event) {
+              /*this.canvas.addEventListener('click', function(event) {
                   Application.onMouseUp(event);
-              });
+              });*/
           }
 
           var uri = MOOD_URI + LIMITS_SERVICE + "?configNumber=" + configNumber;
@@ -141,18 +140,18 @@
       },
 
       draw: function() {
-          var xstep = cw / 50;
-          var ystep = ch / 50;
+          var xstep = this.cw / 50;
+          var ystep = this.ch / 50;
           // var ctx = this.canvas.getContext("2d");
           paper.setup('canvas')
               //ctx.clearRect(0, 0, cw, ch);
 
           //var list = [];
-          for (var y = 0; y < ch; y += ystep) {
-              var left = this.interpolateColor(this.tl, this.bl, y / ch);
-              var right = this.interpolateColor(this.tr, this.br, y / ch);
-              for (var x = 0; x < cw; x += xstep) {
-                  var color = this.interpolateColor(left, right, x / cw);
+          for (var y = 0; y < this.ch; y += ystep) {
+              var left = this.interpolateColor(this.tl, this.bl, y / this.ch);
+              var right = this.interpolateColor(this.tr, this.br, y / this.ch);
+              for (var x = 0; x < this.cw; x += xstep) {
+                  var color = this.interpolateColor(left, right, x / this.cw);
                   /*ctx.fillStyle = "rgb(" + color.r + "," + color.g + "," + color.b + ")";
                   ctx.fillRect(x, y, xstep + 1, ystep + 1);*/
                   var rectangle = new Rectangle(new Point(x, y), new Size(xstep + 1, ystep + 1));
@@ -173,22 +172,22 @@
               ctx.textAlign = 'center';
               ctx.fillStyle = "rgb(255,255,255)";
 
-              textLength = ctx.measureText(this.marker.title);
-              //alertify.log(this.marker.x+' '+textLength.width);
-              if (this.marker.y < ch / 2) {
-                  if (this.marker.x < textLength.width / 2) {
-                      ctx.fillText(this.marker.title, this.marker.x + textLength.width / 2, this.marker.y + 35);
-                  } else if (this.marker.x > cw - textLength.width / 2) {
-                      ctx.fillText(this.marker.title, this.marker.x - textLength.width / 2, this.marker.y + 35);
+              this.textLength = ctx.measureText(this.marker.title);
+              //alertify.log(this.marker.x+' '+this.textLength.width);
+              if (this.marker.y < this.ch / 2) {
+                  if (this.marker.x < this.textLength.width / 2) {
+                      ctx.fillText(this.marker.title, this.marker.x + this.textLength.width / 2, this.marker.y + 35);
+                  } else if (this.marker.x > this.cw - this.textLength.width / 2) {
+                      ctx.fillText(this.marker.title, this.marker.x - this.textLength.width / 2, this.marker.y + 35);
                   } else {
                       ctx.fillText(this.marker.title, this.marker.x, this.marker.y + 35);
                   }
               } else {
-                  if (this.marker.x < textLength.width / 2) {
-                      ctx.fillText(this.marker.title, this.marker.x + textLength.width / 2, this.marker.y - 25);
+                  if (this.marker.x < this.textLength.width / 2) {
+                      ctx.fillText(this.marker.title, this.marker.x + this.textLength.width / 2, this.marker.y - 25);
 
-                  } else if (this.marker.x > cw - textLength.width / 2) {
-                      ctx.fillText(this.marker.title, this.marker.x - textLength.width / 2, this.marker.y - 25);
+                  } else if (this.marker.x > this.cw - this.textLength.width / 2) {
+                      ctx.fillText(this.marker.title, this.marker.x - this.textLength.width / 2, this.marker.y - 25);
                   } else {
                       ctx.fillText(this.marker.title, this.marker.x, this.marker.y - 25);
                   }
@@ -256,31 +255,30 @@
           Application.showMetadata(title, artist);
       },
 
-      onMouseUp: function(event) {
+/*      onMouseUp: function(event) {
           //    if(!start)
           //    return;
           if (!clicked)
               clicked = true;
           //if ((new Date() - this.lastClick) > 1000) {
           this.setMarker(event);
-          xclick = event.pageX;
-          yclick = event.pageY;
+          this.xclick = event.pageX;
+          this.yclick = event.pageY;
           //this.sendPosition(event);
           //this.draw();
           //this.lastClick = new Date();
           //}
-      },
+      },*/
 
       sendSPARQLQuery: function(event) {
           if (!clicked)
               return;
           Application.clear();
-          var x = xclick / cw;
-          var y = 1 - yclick / ch;
+          var x = this.xclick / this.cw;
+          var y = 1 - this.yclick / this.ch;
           var v = Application.linlin(x, 0.0, 1.0, limits.vmin, limits.vmax);
           var a = Application.linlin(y, 0.0, 1.0, limits.amin, limits.amax);
           var uri = MOOD_URI + COORD_SERVICE + "?valence=" + v + "&arousal=" + a;
-          console.log(uri);
           this.sendRequest(uri, this.processMoodResponse);
       },
 
@@ -297,8 +295,8 @@
               title: 'null'
           };
 
-          var x = event.pageX / cw;
-          var y = 1 - event.pageY / ch;
+          var x = event.pageX / this.cw;
+          var y = 1 - event.pageY / this.ch;
 
           this.label.innerHTML = 'Click to send';
           this.marker.title = this.findMood(x, y);
@@ -413,6 +411,7 @@
   }
   window.onload = function() {
       // Create a simple drawing tool:
+      var split = 10;
       var tool = new Tool();
       var path;
       // Define a mousedown and mousedrag handler
@@ -434,7 +433,6 @@
               path = new Path({
                   segments: [event.point],
                   strokeColor: 'blue',
-                  strokeWidth: 6,
                   // Select the path, so we can see its segment points:
                   fullySelected: true
               });
@@ -454,7 +452,7 @@
           var len = parseInt(path.length);
           //alert(len);
           //alert(parseInt(3.5));
-          var segmentCount = path.segments.length;
+          //var segmentCount = path.segments.length;
 
           // When the mouse is released, simplify it:
           //alert(len/split);
