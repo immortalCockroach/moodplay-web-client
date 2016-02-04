@@ -255,20 +255,20 @@
           Application.showMetadata(title, artist);
       },
 
-/*      onMouseUp: function(event) {
-          //    if(!start)
-          //    return;
-          if (!clicked)
-              clicked = true;
-          //if ((new Date() - this.lastClick) > 1000) {
-          this.setMarker(event);
-          this.xclick = event.pageX;
-          this.yclick = event.pageY;
-          //this.sendPosition(event);
-          //this.draw();
-          //this.lastClick = new Date();
-          //}
-      },*/
+      /*      onMouseUp: function(event) {
+                //    if(!start)
+                //    return;
+                if (!clicked)
+                    clicked = true;
+                //if ((new Date() - this.lastClick) > 1000) {
+                this.setMarker(event);
+                this.xclick = event.pageX;
+                this.yclick = event.pageY;
+                //this.sendPosition(event);
+                //this.draw();
+                //this.lastClick = new Date();
+                //}
+            },*/
 
       sendSPARQLQuery: function(event) {
           if (!clicked)
@@ -409,12 +409,12 @@
       }
 
   }
-  window.onload = function() {
+  $(window).load(function() {
       // Create a simple drawing tool:
       var split = 10;
       var tool = new Tool();
       var path;
-      // Define a mousedown and mousedrag handler
+          // Define a mousedown and mousedrag handler
 
       /*    var textItem = new PointText({
               content: 'Click and drag to draw a line.',
@@ -470,4 +470,4 @@
           var percentage = 100 - Math.round(newSegmentCount / segmentCount * 100);
           textItem.content = difference + ' of the ' + segmentCount + ' segments were removed. Saving ' + percentage + '%';*/
       }
-  }
+  });
