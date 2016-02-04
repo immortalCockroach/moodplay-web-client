@@ -24,6 +24,7 @@
   var fadeTime = 5;
   var offset = 30;
   var duration = 60;
+  var split = 10;
   paper.install(window);
   var Application = {
       moods: [
@@ -84,13 +85,14 @@
           }
 
           if (this.is_touch_device) {
-              /*             this.canvas.addEventListener('touchstart', function(event) {
-                               Application.onMouseUp(event.targetTouches[0]);
-                           });*/
-          } else {
-              /*              this.canvas.addEventListener('click', function(event) {
-                                Application.onMouseUp(event);
+              /*              this.canvas.addEventListener('touchstart', function(event) {
+                                Application.onMouseUp(event.targetTouches[0]);
                             });*/
+
+          } else {
+              this.canvas.addEventListener('click', function(event) {
+                  Application.onMouseUp(event);
+              });
           }
 
           var uri = MOOD_URI + LIMITS_SERVICE + "?configNumber=" + configNumber;
@@ -139,12 +141,11 @@
       },
 
       draw: function() {
-          alert('start draw');
           var xstep = cw / 50;
           var ystep = ch / 50;
-         // var ctx = this.canvas.getContext("2d");
+          // var ctx = this.canvas.getContext("2d");
           paper.setup('canvas')
-          //ctx.clearRect(0, 0, cw, ch);
+              //ctx.clearRect(0, 0, cw, ch);
 
           //var list = [];
           for (var y = 0; y < ch; y += ystep) {
@@ -156,13 +157,12 @@
                   ctx.fillRect(x, y, xstep + 1, ystep + 1);*/
                   var rectangle = new Rectangle(new Point(x, y), new Size(xstep + 1, ystep + 1));
                   var pathr = new Path.Rectangle(rectangle);
-                  pathr.fillColor = new Color(color.r/256, color.g/256, color.b/256);
+                  pathr.fillColor = new Color(color.r / 256, color.g / 256, color.b / 256);
               }
           }
 
 
           if (this.marker) {
-              alert('marker')
               ctx.fillStyle = "rgba(0, 0, 0, 0.5)";
               ctx.beginPath();
               ctx.arc(this.marker.x, this.marker.y, 20, 0, Math.PI * 2, true);
@@ -266,7 +266,7 @@
           xclick = event.pageX;
           yclick = event.pageY;
           //this.sendPosition(event);
-          this.draw();
+          //this.draw();
           //this.lastClick = new Date();
           //}
       },
@@ -410,4 +410,66 @@
           AudioPlayer.current = track;
       }
 
+  }
+  window.onload = function() {
+      // Create a simple drawing tool:
+      var tool = new Tool();
+      var path;
+      // Define a mousedown and mousedrag handler
+
+      /*    var textItem = new PointText({
+              content: 'Click and drag to draw a line.',
+              point: new Point(20, 30),
+              fillColor: 'black',
+          });*/
+
+      tool.onMouseDown = function(event) {
+              // If we produced a path before, deselect it:
+              if (path) {
+                  path.selected = false;
+                  path.remove();
+              }
+
+              // Create a new path and set its stroke color to black:
+              path = new Path({
+                  segments: [event.point],
+                  strokeColor: 'blue',
+                  strokeWidth: 6,
+                  // Select the path, so we can see its segment points:
+                  fullySelected: true
+              });
+          }
+          // While the user drags the mouse, points are added to the path
+          // at the position of the mouse:
+      tool.onMouseDrag = function(event) {
+          path.add(event.point);
+
+          // Update the content of the text item to show how many
+          // segments it has:
+          //textItem.content = 'Segment count: ' + path.segments.length;
+      }
+
+      // When the mouse is released, we simplify the path:
+      tool.onMouseUp = function(event) {
+          var len = parseInt(path.length);
+          //alert(len);
+          //alert(parseInt(3.5));
+          var segmentCount = path.segments.length;
+
+          // When the mouse is released, simplify it:
+          //alert(len/split);
+          path.flatten(parseInt(len / (split - 2)));
+
+          // Select the path, so we can see its segments:
+          path.fullySelected = true;
+
+          /*        var array = path.segments;
+                  for (var i = 0; i <= array.length - 1; i++) {
+                      alert("x:" + array[i].point.x / cw + ",y:" + array[i].point.y / ch);
+                  }*/
+          /*var newSegmentCount = path.segments.length;
+          var difference = segmentCount - newSegmentCount;
+          var percentage = 100 - Math.round(newSegmentCount / segmentCount * 100);
+          textItem.content = difference + ' of the ' + segmentCount + ' segments were removed. Saving ' + percentage + '%';*/
+      }
   }
