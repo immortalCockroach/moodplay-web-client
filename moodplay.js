@@ -143,8 +143,8 @@
           var xstep = this.cw / 50;
           var ystep = this.ch / 50;
           // var ctx = this.canvas.getContext("2d");
-          paper.setup('canvas')
-              //ctx.clearRect(0, 0, cw, ch);
+          paper.setup('canvas');
+          //ctx.clearRect(0, 0, cw, ch);
 
           //var list = [];
           for (var y = 0; y < this.ch; y += ystep) {
@@ -152,11 +152,15 @@
               var right = this.interpolateColor(this.tr, this.br, y / this.ch);
               for (var x = 0; x < this.cw; x += xstep) {
                   var color = this.interpolateColor(left, right, x / this.cw);
-                  /*ctx.fillStyle = "rgb(" + color.r + "," + color.g + "," + color.b + ")";
-                  ctx.fillRect(x, y, xstep + 1, ystep + 1);*/
+                  //ctx.fillStyle = "rgb(" + color.r + "," + color.g + "," + color.b + ")";
+                  //ctx.fillRect(x, y, xstep + 1, ystep + 1);
                   var rectangle = new Rectangle(new Point(x, y), new Size(xstep + 1, ystep + 1));
                   var pathr = new Path.Rectangle(rectangle);
-                  pathr.fillColor = new Color(color.r / 256, color.g / 256, color.b / 256);
+                  var color = new Color(color.r / 256, color.g / 256, color.b / 256);
+                  pathr.style = {
+                      fillColor: color
+                  };
+
               }
           }
 
@@ -209,10 +213,10 @@
           //      ctx.restore();
           //    }
       },
-      drawCircle: function(x, y, text,circleArray,textArray) {
+      drawCircle: function(x, y, text, circleArray, textArray) {
           var myCircle = new Path.Circle(new Point(x, y), 20);
           myCircle.fillColor = 'black';
-          myCircle.opacity=0.5;
+          myCircle.opacity = 0.5;
           circleArray.push(myCircle);
       },
       sendRequest: function(uri, callback) {
@@ -260,7 +264,7 @@
           Application.showMetadata(title, artist);
       },
 
-      onMouseUp: function(x, y,circleArray,textArray) {
+      MouseUp: function(x, y, circleArray, textArray) {
           //    if(!start)
           //    return;
           if (!clicked)
@@ -270,7 +274,7 @@
           this.xclick = x;
           this.yclick = y;
 
-          this.drawCircle(x, y, this.marker.title,circleArray,textArray);
+          this.drawCircle(x, y, this.marker.title, circleArray, textArray);
           //this.sendPosition(event);
           //this.draw();
           //this.lastClick = new Date();
@@ -422,8 +426,8 @@
       var split = 10;
       var tool = new Tool();
       var path;
-      var circleArray=[];
-      var textArray=[];
+      var circleArray = [];
+      var textArray = [];
       // Define a mousedown and mousedrag handler
 
       /*    var textItem = new PointText({
@@ -437,27 +441,35 @@
               if (path) {
                   path.selected = false;
                   path.remove();
-                  var circleArrayLength=circleArray.length;
-                  for(var j=0;j<=circleArrayLength-1;j++){
-                    circleArray[j].remove();
+                  var circleArrayLength = circleArray.length;
+                  for (var j = 0; j <= circleArrayLength - 1; j++) {
+                      circleArray[j].remove();
 
                   }
-                  circleArray=[];
-                  textArray=[];
+                  circleArray = [];
+                  textArray = [];
               }
 
               // Create a new path and set its stroke color to black:
               path = new Path({
                   segments: [event.point],
-                  strokeColor: 'blue',
+                  strokeColor: 'black',
+                  strokeWidth: 40,
                   // Select the path, so we can see its segment points:
-                  fullySelected: true
+                  strokeCap: 'round',
+                  strokeJoin: 'round',
+                  opacity: 0.5,
+                  fullySelected: false
               });
           }
           // While the user drags the mouse, points are added to the path
           // at the position of the mouse:
       tool.onMouseDrag = function(event) {
           path.add(event.point);
+          path.smooth({
+              type: 'geometric',
+              factor: 0.4
+          });
 
           // Update the content of the text item to show how many
           // segments it has:
@@ -476,13 +488,14 @@
           path.flatten(parseInt(len / (split - 2)));
 
           // Select the path, so we can see its segments:
-          path.fullySelected = true;
+          path.fullySelected = false;
 
           var array = path.segments;
           var arrlen = array.length;
+          path.remove();
           for (var i = 0; i <= arrlen - 1; i++) {
               var pointOfSeg = array[i].point;
-              Application.onMouseUp(pointOfSeg.x, pointOfSeg.y,circleArray,textArray);
+              Application.MouseUp(pointOfSeg.x, pointOfSeg.y, circleArray, textArray);
           }
           /*var newSegmentCount = path.segments.length;
           var difference = segmentCount - newSegmentCount;
