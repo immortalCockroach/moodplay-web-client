@@ -25,6 +25,7 @@
   var offset = 30;
   var duration = 60;
 
+
   paper.install(window);
   var Application = {
       moods: [
@@ -165,7 +166,7 @@
           }
 
 
-          if (this.marker) {
+/*          if (this.marker) {
               ctx.fillStyle = "rgba(0, 0, 0, 0.5)";
               ctx.beginPath();
               ctx.arc(this.marker.x, this.marker.y, 20, 0, Math.PI * 2, true);
@@ -198,7 +199,7 @@
               }
 
               ctx.restore();
-          }
+          }*/
 
           // if(!start)
           //{
@@ -213,11 +214,44 @@
           //      ctx.restore();
           //    }
       },
-      drawCircle: function(x, y, text, circleArray, textArray) {
+      drawCircleAndText: function(x, y, circleArray, textArray) {
           var myCircle = new Path.Circle(new Point(x, y), 20);
           myCircle.fillColor = 'black';
           myCircle.opacity = 0.5;
           circleArray.push(myCircle);
+          var moodText;
+          var ctx = this.canvas.getContext("2d");
+          this.textLength = ctx.measureText(this.marker.title);
+          if (this.marker.y < this.ch / 2) {
+              if (this.marker.x < this.textLength.width / 2) {
+                  //ctx.fillText(this.marker.title, this.marker.x + this.textLength.width / 2, this.marker.y + 35);
+                  moodText = new PointText(new Point(this.marker.x + this.textLength.width / 2, this.marker.y + 35));
+              } else if (this.marker.x > this.cw - this.textLength.width / 2) {
+                  //ctx.fillText(this.marker.title, this.marker.x - this.textLength.width / 2, this.marker.y + 35);
+                  moodText = new PointText(new Point(this.marker.x - this.textLength.width / 2, this.marker.y + 35));
+                  
+              } else {
+                  //ctx.fillText(this.marker.title, this.marker.x, this.marker.y + 35);
+                  moodText = new PointText(new Point(this.marker.x, this.marker.y + 35));
+              }
+          } else {
+              if (this.marker.x < this.textLength.width / 2) {
+                  //ctx.fillText(this.marker.title, this.marker.x + this.textLength.width / 2, this.marker.y - 25);
+                  moodText = new PointText(new Point(this.marker.x + this.textLength.width / 2, this.marker.y - 25));
+              } else if (this.marker.x > this.cw - this.textLength.width / 2) {
+                  //ctx.fillText(this.marker.title, this.marker.x - this.textLength.width / 2, this.marker.y - 25);
+                  moodText = new PointText(new Point(this.marker.x - this.textLength.width / 2, this.marker.y - 25));
+              } else {
+                  //ctx.fillText(this.marker.title, this.marker.x, this.marker.y - 25);
+                  moodText = new PointText(new Point(this.marker.x, this.marker.y - 25));
+              }
+          }
+          moodText.content=this.marker.title;
+          moodText.fillColor='white';
+          moodText.fontFamily='Arial';
+          moodText.fontSize='16px';
+          moodText.justification='center';
+          textArray.push(moodText);
       },
       sendRequest: function(uri, callback) {
           var request = new XMLHttpRequest();
@@ -274,7 +308,7 @@
           this.xclick = x;
           this.yclick = y;
 
-          this.drawCircle(x, y, this.marker.title, circleArray, textArray);
+          this.drawCircleAndText(x, y, circleArray, textArray);
           //this.sendPosition(event);
           //this.draw();
           //this.lastClick = new Date();
@@ -444,7 +478,7 @@
                   var circleArrayLength = circleArray.length;
                   for (var j = 0; j <= circleArrayLength - 1; j++) {
                       circleArray[j].remove();
-
+                      textArray[j].remove();
                   }
                   circleArray = [];
                   textArray = [];
@@ -478,6 +512,7 @@
 
       // When the mouse is released, we simplify the path:
       tool.onMouseUp = function(event) {
+          path.simplify(1.8);
           var len = parseInt(path.length);
           //alert(len);
           //alert(parseInt(3.5));
