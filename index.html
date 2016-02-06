@@ -2,20 +2,21 @@
 
 <head>
     <title>Mood Conductor</title>
-    <link type="text/css" rel="stylesheet" href="button.css" />
-    <link type="text/css" rel="stylesheet" href="meta.css" />
-    <link type="text/css" rel="stylesheet" href="alertify.core.css" />
-    <link type="text/css" rel="stylesheet" href="alertify.default.css" />
-    <link type="text/css" rel="stylesheet" href="style.css" />
-    <script src="jquery.js"></script>
-    <script src="alertify.js"></script>
-    <script src="paper-full.min.js"></script>
-    <script src="moodplay.js"></script>
+    <link type="text/css" rel="stylesheet" href="css/button.css" />
+    <link type="text/css" rel="stylesheet" href="css/meta.css" />
+    <link type="text/css" rel="stylesheet" href="css/alertify.core.css" />
+    <link type="text/css" rel="stylesheet" href="css/alertify.default.css" />
+    <link type="text/css" rel="stylesheet" href="css/style.css" />
+    <script src="js/jquery.js"></script>
+    <script src="js/alertify.js"></script>
+    <script src="js/paper-full.min.js"></script>
+    <script src="js/moodplay.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <meta charset="UTF-8">
 </head>
 
 <body onload="Application.init()" style="margin:0px;padding:0px">
+    <div>
     <canvas id="canvas">
         <span id="marker" style="position:relative; background:#ccc;"></span>
     </canvas>
@@ -29,6 +30,7 @@
             <div style="font-size:20px;font-weight:bold;">HELP</div>
         </button>
     </p>
+    </div>
 </body>
 
 </html>
