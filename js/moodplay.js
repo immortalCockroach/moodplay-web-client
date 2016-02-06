@@ -166,40 +166,40 @@
           }
 
 
-/*          if (this.marker) {
-              ctx.fillStyle = "rgba(0, 0, 0, 0.5)";
-              ctx.beginPath();
-              ctx.arc(this.marker.x, this.marker.y, 20, 0, Math.PI * 2, true);
-              ctx.fill();
-              //ctx.translate(this.marker.x, this.marker.y);
-              ctx.save();
-              ctx.font = "16px Arial";
-              ctx.textAlign = 'center';
-              ctx.fillStyle = "rgb(255,255,255)";
+          /*          if (this.marker) {
+                        ctx.fillStyle = "rgba(0, 0, 0, 0.5)";
+                        ctx.beginPath();
+                        ctx.arc(this.marker.x, this.marker.y, 20, 0, Math.PI * 2, true);
+                        ctx.fill();
+                        //ctx.translate(this.marker.x, this.marker.y);
+                        ctx.save();
+                        ctx.font = "16px Arial";
+                        ctx.textAlign = 'center';
+                        ctx.fillStyle = "rgb(255,255,255)";
 
-              this.textLength = ctx.measureText(this.marker.title);
-              //alertify.log(this.marker.x+' '+this.textLength.width);
-              if (this.marker.y < this.ch / 2) {
-                  if (this.marker.x < this.textLength.width / 2) {
-                      ctx.fillText(this.marker.title, this.marker.x + this.textLength.width / 2, this.marker.y + 35);
-                  } else if (this.marker.x > this.cw - this.textLength.width / 2) {
-                      ctx.fillText(this.marker.title, this.marker.x - this.textLength.width / 2, this.marker.y + 35);
-                  } else {
-                      ctx.fillText(this.marker.title, this.marker.x, this.marker.y + 35);
-                  }
-              } else {
-                  if (this.marker.x < this.textLength.width / 2) {
-                      ctx.fillText(this.marker.title, this.marker.x + this.textLength.width / 2, this.marker.y - 25);
+                        this.textLength = ctx.measureText(this.marker.title);
+                        //alertify.log(this.marker.x+' '+this.textLength.width);
+                        if (this.marker.y < this.ch / 2) {
+                            if (this.marker.x < this.textLength.width / 2) {
+                                ctx.fillText(this.marker.title, this.marker.x + this.textLength.width / 2, this.marker.y + 35);
+                            } else if (this.marker.x > this.cw - this.textLength.width / 2) {
+                                ctx.fillText(this.marker.title, this.marker.x - this.textLength.width / 2, this.marker.y + 35);
+                            } else {
+                                ctx.fillText(this.marker.title, this.marker.x, this.marker.y + 35);
+                            }
+                        } else {
+                            if (this.marker.x < this.textLength.width / 2) {
+                                ctx.fillText(this.marker.title, this.marker.x + this.textLength.width / 2, this.marker.y - 25);
 
-                  } else if (this.marker.x > this.cw - this.textLength.width / 2) {
-                      ctx.fillText(this.marker.title, this.marker.x - this.textLength.width / 2, this.marker.y - 25);
-                  } else {
-                      ctx.fillText(this.marker.title, this.marker.x, this.marker.y - 25);
-                  }
-              }
+                            } else if (this.marker.x > this.cw - this.textLength.width / 2) {
+                                ctx.fillText(this.marker.title, this.marker.x - this.textLength.width / 2, this.marker.y - 25);
+                            } else {
+                                ctx.fillText(this.marker.title, this.marker.x, this.marker.y - 25);
+                            }
+                        }
 
-              ctx.restore();
-          }*/
+                        ctx.restore();
+                    }*/
 
           // if(!start)
           //{
@@ -229,7 +229,7 @@
               } else if (this.marker.x > this.cw - this.textLength.width / 2) {
                   //ctx.fillText(this.marker.title, this.marker.x - this.textLength.width / 2, this.marker.y + 35);
                   moodText = new PointText(new Point(this.marker.x - this.textLength.width / 2, this.marker.y + 35));
-                  
+
               } else {
                   //ctx.fillText(this.marker.title, this.marker.x, this.marker.y + 35);
                   moodText = new PointText(new Point(this.marker.x, this.marker.y + 35));
@@ -246,11 +246,11 @@
                   moodText = new PointText(new Point(this.marker.x, this.marker.y - 25));
               }
           }
-          moodText.content=this.marker.title;
-          moodText.fillColor='white';
-          moodText.fontFamily='Arial';
-          moodText.fontSize='16px';
-          moodText.justification='center';
+          moodText.content = this.marker.title;
+          moodText.fillColor = 'white';
+          moodText.fontFamily = 'Arial';
+          moodText.fontSize = '16px';
+          moodText.justification = 'center';
           textArray.push(moodText);
       },
       sendRequest: function(uri, callback) {
@@ -262,7 +262,7 @@
                   if (request.status == 200) {
                       callback(request.responseText);
                   } else {
-                      alert("Query error: " + request.status + " " + request.responseText);
+                      //alert("Query error: " + request.status + " " + request.responseText);
                   }
               }
           };
@@ -532,6 +532,14 @@
               var pointOfSeg = array[i].point;
               Application.MouseUp(pointOfSeg.x, pointOfSeg.y, circleArray, textArray);
           }
+          $("#moodGround").fadeOut(1000);
+          var node = document.createElement('link');
+          node.rel = 'stylesheet';
+          node.href = 'css/reset.css';
+          var head = document.getElementsByTagName('head')[0];
+          head.removeChild(head.children[1]);
+          head.insertBefore(node,head.children[1]);
+          $("#musicPlayer").fadeIn(2000);
           /*var newSegmentCount = path.segments.length;
           var difference = segmentCount - newSegmentCount;
           var percentage = 100 - Math.round(newSegmentCount / segmentCount * 100);

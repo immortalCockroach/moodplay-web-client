@@ -7,29 +7,71 @@
     <link type="text/css" rel="stylesheet" href="css/alertify.core.css" />
     <link type="text/css" rel="stylesheet" href="css/alertify.default.css" />
     <link type="text/css" rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/audiostyle.css" media="screen" type="text/css" />
     <script src="js/jquery.js"></script>
-    <script src="js/alertify.js"></script>
+    <script src="js/alertify.min.js"></script>
     <script src="js/paper-full.min.js"></script>
+    <script src="js/jquery.jplayer.min.js"></script>
+    <script src="js/jplayer.playlist.min.js"></script>
     <script src="js/moodplay.js"></script>
+    <script src="js/index.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <meta charset="UTF-8">
 </head>
 
 <body onload="Application.init()" style="margin:0px;padding:0px">
-    <div>
-    <canvas id="canvas">
-        <span id="marker" style="position:relative; background:#ccc;"></span>
-    </canvas>
-    <div class="meta"><span id="title"></span> : <span id="artist"></span>&nbsp;&nbsp; <span id="filename"></span></div>
-    <p style="text-align:center">
-        <button class="button green" onclick="Application.sendSPARQLQuery()">
-            <div style="font-size:20px;font-weight:bold" id="label">Click the Grid
+    <div id="moodGround"  style="margin:0px;padding:0px">
+        <canvas id="canvas">
+            <span id="marker" style="position:relative; background:#ccc;"></span>
+        </canvas>
+        <div class="meta"><span id="title"></span> : <span id="artist"></span>&nbsp;&nbsp; <span id="filename"></span></div>
+        <p style="text-align:center">
+            <button class="button green" onclick="Application.sendSPARQLQuery()">
+                <div style="font-size:20px;font-weight:bold" id="label">Click the Grid
+                </div>
+            </button>
+            <button class="button orange" onclick="javascript:location.href='help.html'">
+                <div style="font-size:20px;font-weight:bold;">HELP</div>
+            </button>
+        </p>
+    </div>
+    <div class="music-player" style="display:none" id="musicPlayer">
+        <!--<div style="background-image: url(http://i.imgur.com/yqB0erk.jpg);" class="album"></div>-->
+        <div class="info">
+            <div class="left">
+                <a href="javascript:;" class="icon-shuffle"></a>
+                <a href="javascript:;" class="icon-heart"></a>
             </div>
-        </button>
-        <button class="button orange" onclick="javascript:location.href='help.html'">
-            <div style="font-size:20px;font-weight:bold;">HELP</div>
-        </button>
-    </p>
+            <div class="center">
+                <div class="jp-playlist">
+                    <ul>
+                        <li></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="right">
+                <a href="javascript:;" class="icon-repeat"></a>
+                <a href="javascript:;" class="icon-share"></a>
+            </div>
+            <div class="progress jp-seek-bar">
+                <span class="jp-play-bar" style="width: 0%"></span>
+            </div>
+        </div>
+        <div class="controls">
+            <div class="current jp-current-time">00:00</div>
+            <div class="play-controls">
+                <a href="javascript:;" class="icon-previous jp-previous" title="previous"></a>
+                <a href="javascript:;" class="icon-play jp-play" title="play"></a>
+                <a href="javascript:;" class="icon-pause jp-pause" title="pause"></a>
+                <a href="javascript:;" class="icon-next jp-next" title="next"></a>
+            </div>
+            <div class="volume-level jp-volume-bar">
+                <span class="jp-volume-bar-value" style="width: 0%"></span>
+                <a href="javascript:;" class="icon-volume-up jp-volume-max" title="max volume"></a>
+                <a href="javascript:;" class="icon-volume-down jp-mute" title="mute"></a>
+            </div>
+        </div>
+        <div id="jquery_jplayer" class="jp-jplayer"></div>
     </div>
 </body>
 
