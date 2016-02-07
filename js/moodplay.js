@@ -263,6 +263,7 @@
                       callback(request.responseText);
                   } else {
                       //alert("Query error: " + request.status + " " + request.responseText);
+                      //window.location.href="audioplayer.html"
                   }
               }
           };
@@ -289,6 +290,7 @@
 
       processAudioResponse: function(fileuri) {
           AudioPlayer.loadTrack(fileuri);
+
       },
 
       processMBResponse: function(json) {
@@ -320,12 +322,14 @@
           if (!clicked)
               return;
           Application.clear();
+          window.location.href = "audioplayer.html";
           var x = this.xclick / this.cw;
           var y = 1 - this.yclick / this.ch;
           var v = Application.linlin(x, 0.0, 1.0, limits.vmin, limits.vmax);
           var a = Application.linlin(y, 0.0, 1.0, limits.amin, limits.amax);
           var uri = MOOD_URI + COORD_SERVICE + "?valence=" + v + "&arousal=" + a;
           this.sendRequest(uri, this.processMoodResponse);
+
       },
 
       linlin: function(val, inmin, inmax, outmin, outmax) {
@@ -532,14 +536,28 @@
               var pointOfSeg = array[i].point;
               Application.MouseUp(pointOfSeg.x, pointOfSeg.y, circleArray, textArray);
           }
-          $("#moodGround").fadeOut(1000);
-          var node = document.createElement('link');
-          node.rel = 'stylesheet';
-          node.href = 'css/reset.css';
-          var head = document.getElementsByTagName('head')[0];
-          head.removeChild(head.children[1]);
-          head.insertBefore(node,head.children[1]);
-          $("#musicPlayer").fadeIn(2000);
+
+          //之后将清空和跳转写成回调函数 请求音乐完成后回调
+
+          /*          var circleArrayLength = circleArray.length;
+                    if (circleArrayLength > 0) {
+                        for (var j = 0; j <= circleArrayLength - 1; j++) {
+                            circleArray[j].remove();
+                            textArray[j].remove();
+                        }
+                    }
+                    circleArray = [];
+                    textArray = [];*/
+
+
+          /*          $("#moodGround").fadeOut(1000);
+                    var node = document.createElement('link');
+                    node.rel = 'stylesheet';
+                    node.href = 'css/reset.css';
+                    var head = document.getElementsByTagName('head')[0];
+                    head.removeChild(head.children[1]);
+                    head.insertBefore(node, head.children[1]);
+                    $("#musicPlayer").fadeIn(2000);*/
           /*var newSegmentCount = path.segments.length;
           var difference = segmentCount - newSegmentCount;
           var percentage = 100 - Math.round(newSegmentCount / segmentCount * 100);
