@@ -1,14 +1,15 @@
 import cherrypy, json
 from endpoint_query import *
 
-ENDPOINT_URI = "localhost"
-PORT = 3030
+ENDPOINT_URI = "http://sovarr.c4dm.eecs.qmul.ac.uk"
 DATASET = "mood"
+DIR = "mood"
 
 class MoodService:
 
     def __init__(self):
-        self.endpoint = SparqlEndpoint(ENDPOINT_URI, PORT, DATASET)
+        #self.endpoint = SparqlEndpoint(ENDPOINT_URI, PORT, DATASET)
+        self.endpoint = SparqlHttpConnection(ENDPOINT_URI, DIR)
 
     def coordinateLimits(self, configNumber):
         params = { "@configNumber": configNumber }
