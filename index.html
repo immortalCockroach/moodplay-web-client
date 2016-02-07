@@ -7,20 +7,16 @@
     <link type="text/css" rel="stylesheet" href="css/alertify.core.css" />
     <link type="text/css" rel="stylesheet" href="css/alertify.default.css" />
     <link type="text/css" rel="stylesheet" href="css/style.css" />
-    <link rel="stylesheet" href="css/audiostyle.css" media="screen" type="text/css" />
     <script src="js/jquery.js"></script>
     <script src="js/alertify.min.js"></script>
     <script src="js/paper-full.min.js"></script>
-    <script src="js/jquery.jplayer.min.js"></script>
-    <script src="js/jplayer.playlist.min.js"></script>
     <script src="js/moodplay.js"></script>
-    <script src="js/index.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <meta charset="UTF-8">
 </head>
 
 <body onload="Application.init()" style="margin:0px;padding:0px">
-    <div id="moodGround"  style="margin:0px;padding:0px">
+    <div id="moodGround" style="margin:0px;padding:0px">
         <canvas id="canvas">
             <span id="marker" style="position:relative; background:#ccc;"></span>
         </canvas>
@@ -35,7 +31,7 @@
             </button>
         </p>
     </div>
-    <div class="music-player" style="display:none" id="musicPlayer">
+    <div class="music-player" style="display:none" id="musicPlayer" onmouseup="returnMoodGround(event)">
         <!--<div style="background-image: url(http://i.imgur.com/yqB0erk.jpg);" class="album"></div>-->
         <div class="info">
             <div class="left">
