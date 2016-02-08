@@ -39,14 +39,14 @@ function returnMoodGround(event) {
           head.removeChild(head.children[1]);
           head.insertBefore(node, head.children[1]);
           $("#musicPlayer").fadeIn(2000);*/
-    if (event.button == 2 && (document.getElementById('musicPlayer').style.display == "")) {
-        $("#musicPlayer").fadeOut(1000);
-        var node = document.createElement('link');
-        node.rel = 'stylesheet';
-        node.href = 'css/button.css';
-        var head = document.getElementsByTagName('head')[0];
-        head.removeChild(head.children[1]);
-        head.insertBefore(node, head.children[1]);
-        $("#moodGround").fadeIn(1000);
-    }
+    /*if (event.button == 2 ) {
+        window.location.href = "index.html";
+    }*/
+    if (document.all) {
+        window.event.returnValue = false;
+    } // for IE  
+    else {
+        event.preventDefault()
+    };
+    window.location.href = "index.html";
 }
