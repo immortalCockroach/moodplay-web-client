@@ -26,7 +26,7 @@
   var duration = 60;
 
   var moodSet = new Set();
-  var musicSet = new Set();
+  var musicArray = [];
   paper.install(window);
   var Application = {
       moods: [
@@ -241,7 +241,7 @@
           var path = dict[0].path.value;
           Application.sendRequest(MB_URI + mbid + "?inc=artist-credits&fmt=json", Application.processMBResponse);
           var uri = AUDIO_BASE_URI + path.replace(".wav", ".mp3");
-          // TODO create Song according to uri,artist and title
+          musicArray[musicArray.length-1].setUri(uri);
           Application.processAudioResponse(uri);
       },
 
@@ -254,6 +254,8 @@
           var dict = jQuery.parseJSON(json);
           var title = dict.title;
           var artist = dict['artist-credit'][0].artist.name;
+          var song = new Song(title,artist);
+          musicArray.push(song);
           Application.showMetadata(title, artist);
       },
 
@@ -279,20 +281,15 @@
           if (!clicked)
               return;
           Application.clear();
-          for (var mood of moodSet) {
-              alert(mood);
-          }
-          for (var song of this.markers) {
-            alert(song.title);
-          }
           window.location.href = "audioplayer.html";
-          var x = this.xclick / this.cw;
-          var y = 1 - this.yclick / this.ch;
-          var v = Application.linlin(x, 0.0, 1.0, limits.vmin, limits.vmax);
-          var a = Application.linlin(y, 0.0, 1.0, limits.amin, limits.amax);
-          var uri = MOOD_URI + COORD_SERVICE + "?valence=" + v + "&arousal=" + a;
-          this.sendRequest(uri, this.processMoodResponse);
-
+          for (var mood of this.markers) {
+              var x = mood.x / this.cw;
+              var y = 1 - mood.y / this.ch;
+              var v = Application.linlin(x, 0.0, 1.0, limits.vmin, limits.vmax);
+              var a = Application.linlin(y, 0.0, 1.0, limits.amin, limits.amax);
+              var uri = MOOD_URI + COORD_SERVICE + "?valence=" + v + "&arousal=" + a;
+              this.sendRequest(uri, this.processMoodResponse);
+          }
       },
 
       linlin: function(val, inmin, inmax, outmin, outmax) {
@@ -338,6 +335,7 @@
           $("#filename").text("");
           $("#title").text("");
           $("#artist").text("");
+          moodSet.clear();
       },
 
       fadeTrack: function(path) {
@@ -352,10 +350,12 @@
 
   };
 
-  function Song(title_, artist_, uri_) {
+  function Song(title_, artist_) {
       this.title = title_;
       this.artist = artist_;
-      this.uri = uri_;
+      this.setUri = function(uri_) {
+          this.uri = uri_;
+      }
   }
 
   function Marker(x_, y_, title_) {
@@ -450,8 +450,7 @@
           });*/
 
       tool.onMouseDown = function(event) {
-              moodSet.clear();
-              musicSet.clear();
+              musicArray=[];
               // If we produced a path before, deselect it:
               if (path) {
                   path.selected = false;
