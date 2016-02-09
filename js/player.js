@@ -93,7 +93,7 @@ $(document).ready(function() {
             mp3: "http://www.jplayer.org/audio/mp3/Miaow-10-Thin-ice.mp3",
             oga: "http://www.jplayer.org/audio/ogg/Miaow-10-Thin-ice.ogg"
         }], {
-            swfPath: "../../dist/jplayer",
+            swfPath: "./Jplayer.swf",
             supplied: "oga, mp3",
             wmode: "window",
             useStateClassSkin: true,
