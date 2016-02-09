@@ -25,7 +25,8 @@
   var offset = 30;
   var duration = 60;
 
-
+  var moodSet = new Set();
+  var musicSet = new Set();
   paper.install(window);
   var Application = {
       moods: [
@@ -132,6 +133,9 @@
           b: 80
       },
 
+      markers: new Set(),
+
+
       interpolateColor: function(a, b, x) {
           return {
               r: Math.floor(a.r + (b.r - a.r) * x),
@@ -164,56 +168,8 @@
 
               }
           }
-
-
-          /*          if (this.marker) {
-                        ctx.fillStyle = "rgba(0, 0, 0, 0.5)";
-                        ctx.beginPath();
-                        ctx.arc(this.marker.x, this.marker.y, 20, 0, Math.PI * 2, true);
-                        ctx.fill();
-                        //ctx.translate(this.marker.x, this.marker.y);
-                        ctx.save();
-                        ctx.font = "16px Arial";
-                        ctx.textAlign = 'center';
-                        ctx.fillStyle = "rgb(255,255,255)";
-
-                        this.textLength = ctx.measureText(this.marker.title);
-                        //alertify.log(this.marker.x+' '+this.textLength.width);
-                        if (this.marker.y < this.ch / 2) {
-                            if (this.marker.x < this.textLength.width / 2) {
-                                ctx.fillText(this.marker.title, this.marker.x + this.textLength.width / 2, this.marker.y + 35);
-                            } else if (this.marker.x > this.cw - this.textLength.width / 2) {
-                                ctx.fillText(this.marker.title, this.marker.x - this.textLength.width / 2, this.marker.y + 35);
-                            } else {
-                                ctx.fillText(this.marker.title, this.marker.x, this.marker.y + 35);
-                            }
-                        } else {
-                            if (this.marker.x < this.textLength.width / 2) {
-                                ctx.fillText(this.marker.title, this.marker.x + this.textLength.width / 2, this.marker.y - 25);
-
-                            } else if (this.marker.x > this.cw - this.textLength.width / 2) {
-                                ctx.fillText(this.marker.title, this.marker.x - this.textLength.width / 2, this.marker.y - 25);
-                            } else {
-                                ctx.fillText(this.marker.title, this.marker.x, this.marker.y - 25);
-                            }
-                        }
-
-                        ctx.restore();
-                    }*/
-
-          // if(!start)
-          //{
-          //  ctx.save();
-          //  ctx.fillStyle = "rgba(0, 0, 0, 0.7)";
-          //ctx.fillRect(0, 0, cw, ch);
-          //ctx.translate(cw/2, ch/2-50);
-          //      ctx.font = "16px Arial";
-          //      ctx.fillStyle = "rgb(255,255,255)";
-          //      ctx.textAlign = 'center';
-          //      ctx.fillText("Find the emotional direction on the canvas and click the word tag to send your expected emotion. The visualisation screen shown on stage would display the emotion instruction that most audience' expectation. Notice that you shouldn't send the instruction so frequently.", 0, 0);  
-          //      ctx.restore();
-          //    }
       },
+
       drawCircleAndText: function(x, y, circleArray, textArray) {
           var myCircle = new Path.Circle(new Point(x, y), 20);
           myCircle.fillColor = 'black';
@@ -222,28 +178,28 @@
           var moodText;
           var ctx = this.canvas.getContext("2d");
           this.textLength = ctx.measureText(this.marker.title);
-          if (this.marker.y < this.ch / 2) {
-              if (this.marker.x < this.textLength.width / 2) {
+          if (y < this.ch / 2) {
+              if (x < this.textLength.width / 2) {
                   //ctx.fillText(this.marker.title, this.marker.x + this.textLength.width / 2, this.marker.y + 35);
-                  moodText = new PointText(new Point(this.marker.x + this.textLength.width / 2, this.marker.y + 35));
-              } else if (this.marker.x > this.cw - this.textLength.width / 2) {
+                  moodText = new PointText(new Point(x + this.textLength.width / 2, y + 35));
+              } else if (x > this.cw - this.textLength.width / 2) {
                   //ctx.fillText(this.marker.title, this.marker.x - this.textLength.width / 2, this.marker.y + 35);
-                  moodText = new PointText(new Point(this.marker.x - this.textLength.width / 2, this.marker.y + 35));
+                  moodText = new PointText(new Point(x - this.textLength.width / 2, y + 35));
 
               } else {
                   //ctx.fillText(this.marker.title, this.marker.x, this.marker.y + 35);
-                  moodText = new PointText(new Point(this.marker.x, this.marker.y + 35));
+                  moodText = new PointText(new Point(x, y + 35));
               }
           } else {
-              if (this.marker.x < this.textLength.width / 2) {
+              if (x < this.textLength.width / 2) {
                   //ctx.fillText(this.marker.title, this.marker.x + this.textLength.width / 2, this.marker.y - 25);
-                  moodText = new PointText(new Point(this.marker.x + this.textLength.width / 2, this.marker.y - 25));
-              } else if (this.marker.x > this.cw - this.textLength.width / 2) {
+                  moodText = new PointText(new Point(x + this.textLength.width / 2, y - 25));
+              } else if (x > this.cw - this.textLength.width / 2) {
                   //ctx.fillText(this.marker.title, this.marker.x - this.textLength.width / 2, this.marker.y - 25);
-                  moodText = new PointText(new Point(this.marker.x - this.textLength.width / 2, this.marker.y - 25));
+                  moodText = new PointText(new Point(x - this.textLength.width / 2, y - 25));
               } else {
                   //ctx.fillText(this.marker.title, this.marker.x, this.marker.y - 25);
-                  moodText = new PointText(new Point(this.marker.x, this.marker.y - 25));
+                  moodText = new PointText(new Point(x, y - 25));
               }
           }
           moodText.content = this.marker.title;
@@ -285,6 +241,7 @@
           var path = dict[0].path.value;
           Application.sendRequest(MB_URI + mbid + "?inc=artist-credits&fmt=json", Application.processMBResponse);
           var uri = AUDIO_BASE_URI + path.replace(".wav", ".mp3");
+          // TODO create Song according to uri,artist and title
           Application.processAudioResponse(uri);
       },
 
@@ -322,6 +279,12 @@
           if (!clicked)
               return;
           Application.clear();
+          for (var mood of moodSet) {
+              alert(mood);
+          }
+          for (var song of this.markers) {
+            alert(song.title);
+          }
           window.location.href = "audioplayer.html";
           var x = this.xclick / this.cw;
           var y = 1 - this.yclick / this.ch;
@@ -340,16 +303,16 @@
 
       setMarker: function(pX, pY) {
           this.marker = {
-              x: pX,
-              y: pY,
               title: 'null'
           };
 
-          var x = pX / this.cw;
-          var y = 1 - pY / this.ch;
-
           this.label.innerHTML = 'Click to send';
-          this.marker.title = this.findMood(x, y);
+          this.marker.title = this.findMood(pX / this.cw, 1 - pY / this.ch);
+          // Notice:当mood之前未出现时加入集合,此处markers中的Marker的x,y没有经过转换,之后需要转换
+          if (!moodSet.has(this.marker.title)) {
+              moodSet.add(this.marker.title);
+              this.markers.add(new Marker(pX, pY, this.marker.title));
+          }
       },
 
       findMood: function(x, y) {
@@ -388,6 +351,18 @@
 
 
   };
+
+  function Song(title_, artist_, uri_) {
+      this.title = title_;
+      this.artist = artist_;
+      this.uri = uri_;
+  }
+
+  function Marker(x_, y_, title_) {
+      this.x = x_;
+      this.y = y_;
+      this.title = title_;
+  }
 
   var AudioPlayer = {
       init: function() {
@@ -475,6 +450,8 @@
           });*/
 
       tool.onMouseDown = function(event) {
+              moodSet.clear();
+              musicSet.clear();
               // If we produced a path before, deselect it:
               if (path) {
                   path.selected = false;
