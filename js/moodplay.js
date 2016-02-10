@@ -28,6 +28,7 @@
   var moodSet = new Set();
   var musicArray = [];
   paper.install(window);
+  var trackNumber = 10;
   var Application = {
       moods: [
           ['pathetic', 0.12, 0.27, 0, 0],
@@ -241,7 +242,7 @@
           var path = dict[0].path.value;
           Application.sendRequest(MB_URI + mbid + "?inc=artist-credits&fmt=json", Application.processMBResponse);
           var uri = AUDIO_BASE_URI + path.replace(".wav", ".mp3");
-          musicArray[musicArray.length-1].setUri(uri);
+          musicArray[musicArray.length - 1].setUri(uri);
           Application.processAudioResponse(uri);
       },
 
@@ -254,7 +255,7 @@
           var dict = jQuery.parseJSON(json);
           var title = dict.title;
           var artist = dict['artist-credit'][0].artist.name;
-          var song = new Song(title,artist);
+          var song = new Song(title, artist);
           musicArray.push(song);
           Application.showMetadata(title, artist);
       },
@@ -329,6 +330,15 @@
           }
 
           return this.moods[index][0];
+      },
+
+      setNoOfTracks: function() {
+          var num = parseInt(document.getElementById('noOfTracks').value);
+          if (isNaN(num) || num <= 0) {
+              alert('Input must be a integer');
+          } else {
+              trackNumber = num;
+          }
       },
 
       clear: function() {
@@ -436,7 +446,6 @@
   }
   $(window).load(function() {
       // Create a simple drawing tool:
-      var split = 10;
       var tool = new Tool();
       var path;
       var circleArray = [];
@@ -450,7 +459,7 @@
           });*/
 
       tool.onMouseDown = function(event) {
-              musicArray=[];
+              musicArray = [];
               // If we produced a path before, deselect it:
               if (path) {
                   path.selected = false;
@@ -479,11 +488,13 @@
           // While the user drags the mouse, points are added to the path
           // at the position of the mouse:
       tool.onMouseDrag = function(event) {
-          path.add(event.point);
-          path.smooth({
-              type: 'geometric',
-              factor: 0.4
-          });
+          if (!isNaN(trackNumber) && trackNumber >= 2) {
+              path.add(event.point);
+              path.smooth({
+                  type: 'geometric',
+                  factor: 0.4
+              });
+          }
 
           // Update the content of the text item to show how many
           // segments it has:
@@ -492,16 +503,28 @@
 
       // When the mouse is released, we simplify the path:
       tool.onMouseUp = function(event) {
-          path.simplify(1.8);
-          var len = parseInt(path.length);
-          //alert(len);
-          //alert(parseInt(3.5));
-          //var segmentCount = path.segments.length;
+          if (!isNaN(trackNumber) && trackNumber >= 2) {
+              path.simplify(1.8);
+              var len = parseInt(path.length);
 
-          // When the mouse is released, simplify it:
-          //alert(len/split);
-          path.flatten(parseInt(len / (split - 2)));
+              if (typeof(trackNumber) == 'undefined' || isNaN(parseInt(trackNumber))) {
+                  alert('Tracks number is wrong,please reset it.');
+                  return;
+              }
+              //alert(len);
+              //alert(parseInt(3.5));
+              //var segmentCount = path.segments.length;
 
+              // When the mouse is released, simplify it:
+              //alert(len/split);
+              if (trackNumber >= 3) {
+                  path.flatten(parseInt(len / (trackNumber - 2)));
+              } else {
+                  if (trackNumber == 2) {
+                      path.flatten(len + 1);
+                  }
+              }
+          }
           // Select the path, so we can see its segments:
           path.fullySelected = false;
 
