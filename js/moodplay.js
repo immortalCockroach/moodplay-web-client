@@ -335,9 +335,10 @@
       setNoOfTracks: function() {
           var num = parseInt(document.getElementById('noOfTracks').value);
           if (isNaN(num) || num <= 0) {
-              alert('Input must be a integer');
+              alert('Input must be a integer and greater than 0');
           } else {
               trackNumber = num;
+              alert('Tracks is set to:' + num);
           }
       },
 
@@ -448,6 +449,7 @@
       // Create a simple drawing tool:
       var tool = new Tool();
       var path;
+      var transparentPath;
       var circleArray = [];
       var textArray = [];
       // Define a mousedown and mousedrag handler
@@ -464,6 +466,7 @@
               if (path) {
                   path.selected = false;
                   path.remove();
+                  transparentPath.remove();
                   var circleArrayLength = circleArray.length;
                   for (var j = 0; j <= circleArrayLength - 1; j++) {
                       circleArray[j].remove();
@@ -477,7 +480,7 @@
               path = new Path({
                   segments: [event.point],
                   strokeColor: 'black',
-                  strokeWidth: 40,
+                  strokeWidth: 30,
                   // Select the path, so we can see its segment points:
                   strokeCap: 'round',
                   strokeJoin: 'round',
@@ -504,9 +507,13 @@
       // When the mouse is released, we simplify the path:
       tool.onMouseUp = function(event) {
           if (!isNaN(trackNumber) && trackNumber >= 2) {
-              path.simplify(1.8);
-              var len = parseInt(path.length);
 
+              transparentPath = path.clone();
+              transparentPath.opacity = 0.2;
+              //alert('before simplify:'+path.segments.length);
+              path.simplify(trackNumber/3);
+              var len = parseInt(path.length);
+              //alert('after simplify:'+path.segments.length);
               if (typeof(trackNumber) == 'undefined' || isNaN(parseInt(trackNumber))) {
                   alert('Tracks number is wrong,please reset it.');
                   return;
@@ -524,6 +531,7 @@
                       path.flatten(len + 1);
                   }
               }
+              //alert('before flatten:'+path.length);
           }
           // Select the path, so we can see its segments:
           path.fullySelected = false;
