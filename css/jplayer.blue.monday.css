@@ -23,11 +23,6 @@ html {
   min-height: 100%;
 }
 
-body {
-  background: #eee url("../images/82fLDu4.jpg") no-repeat center;
-  background-size: cover;
-  font-family: "Open Sans", sans-serif;
-}
 .jp-audio *:focus,
 .jp-audio-stream *:focus,
 .jp-video *:focus {
