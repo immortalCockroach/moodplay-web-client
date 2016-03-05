@@ -29,6 +29,10 @@
   var musicArray = [];
   paper.install(window);
   var trackNumber = 10;
+
+/*  var audioJs = ['js/jquery.jplayer.min.js', 'js/jplayer.playlist.min.js'];
+  var audioCss = ['css/jplayer.blue.monday.css'];*/
+
   var Application = {
       moods: [
           ['pathetic', 0.12, 0.27, 0, 0],
@@ -282,15 +286,23 @@
           if (!clicked)
               return;
           Application.clear();
-          window.location.href = "audioplayer.html";
-          for (var mood of this.markers) {
-              var x = mood.x / this.cw;
-              var y = 1 - mood.y / this.ch;
-              var v = Application.linlin(x, 0.0, 1.0, limits.vmin, limits.vmax);
-              var a = Application.linlin(y, 0.0, 1.0, limits.amin, limits.amax);
-              var uri = MOOD_URI + COORD_SERVICE + "?valence=" + v + "&arousal=" + a;
-              this.sendRequest(uri, this.processMoodResponse);
-          }
+          $('#moodGround').css("z-index","-1");
+          $('#moodGround').fadeTo("slow",0.4);
+
+/*          Application.deleteCssAndJS();
+          Application.addCssAndJs();*/
+
+          $('#jp_container_1').fadeIn(1000);
+          $('#jquery_jplayer_1').fadeIn(10);
+          /*          window.location.href = "audioplayer.html";
+                    for (var mood of this.markers) {
+                        var x = mood.x / this.cw;
+                        var y = 1 - mood.y / this.ch;
+                        var v = Application.linlin(x, 0.0, 1.0, limits.vmin, limits.vmax);
+                        var a = Application.linlin(y, 0.0, 1.0, limits.amin, limits.amax);
+                        var uri = MOOD_URI + COORD_SERVICE + "?valence=" + v + "&arousal=" + a;
+                        this.sendRequest(uri, this.processMoodResponse);
+                    }*/
       },
 
       linlin: function(val, inmin, inmax, outmin, outmax) {
@@ -347,6 +359,7 @@
           $("#title").text("");
           $("#artist").text("");
           moodSet.clear();
+          this.markers.clear();
       },
 
       fadeTrack: function(path) {
@@ -357,6 +370,40 @@
           $("#title").text(title);
           $("#artist").text(artist);
       }
+
+/*      deleteCssAndJS: function() {
+          var link = document.getElementsByTagName('head')[0];
+          for (var i = 0; i <= 4; i++) {
+              link.removeChild(link.children[0]);
+          }
+          for (i = 0; i <= 1; i++) {
+              link.removeChild(link.children[1]);
+          }
+      },
+
+      addCssAndJs: function() {
+          var link = document.getElementsByTagName('head')[0];
+          var jqueryjs = link.children[0];
+          var moodjs = link.children[1];
+          var node;
+          for (css of audioCss) {
+              node = document.createElement('link');
+              node.rel = 'stylesheet';
+              node.href = css;
+              link.insertBefore(node, jqueryjs);
+          }
+          for (js of audioJs) {
+              node = document.createElement('script');
+              node.type = 'text/javascript';
+              node.src = js;
+              link.insertBefore(node, moodjs);
+          }
+          node = document.createElement('script');
+          node.type = 'text/javascript';
+          node.src = 'js/player.js';
+          link.appendChild(node);
+
+      }*/
 
 
   };
@@ -511,7 +558,7 @@
               transparentPath = path.clone();
               transparentPath.opacity = 0.2;
               //alert('before simplify:'+path.segments.length);
-              path.simplify(trackNumber/3);
+              path.simplify(trackNumber / 3);
               var len = parseInt(path.length);
               //alert('after simplify:'+path.segments.length);
               if (typeof(trackNumber) == 'undefined' || isNaN(parseInt(trackNumber))) {
