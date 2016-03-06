@@ -29,9 +29,9 @@
   var musicArray = [];
   paper.install(window);
   var trackNumber = 10;
-
-/*  var audioJs = ['js/jquery.jplayer.min.js', 'js/jplayer.playlist.min.js'];
-  var audioCss = ['css/jplayer.blue.monday.css'];*/
+  var mode;
+  /*  var audioJs = ['js/jquery.jplayer.min.js', 'js/jplayer.playlist.min.js'];
+    var audioCss = ['css/jplayer.blue.monday.css'];*/
 
   var Application = {
       moods: [
@@ -76,6 +76,7 @@
           ['upbeat', 0.91, 0.55, 0, 0]
       ],
       init: function() {
+          mode = 'draw';
           this.is_touch_device = 'ontouchstart' in document.documentElement;
           this.canvas = document.getElementById('canvas');
           this.cw = document.documentElement.clientWidth;
@@ -285,12 +286,14 @@
       sendSPARQLQuery: function(event) {
           if (!clicked)
               return;
+          // clear moodSet和markers
           Application.clear();
-          $('#moodGround').css("z-index","-1");
-          $('#moodGround').fadeTo("slow",0.4);
+          mode = 'play';
+          $('#moodGround').css("z-index", "-1");
+          $('#moodGround').fadeTo("slow", 0.4);
 
-/*          Application.deleteCssAndJS();
-          Application.addCssAndJs();*/
+          /*          Application.deleteCssAndJS();
+                    Application.addCssAndJs();*/
 
           $('#jp_container_1').fadeIn(1000);
           $('#jquery_jplayer_1').fadeIn(10);
@@ -371,39 +374,39 @@
           $("#artist").text(artist);
       }
 
-/*      deleteCssAndJS: function() {
-          var link = document.getElementsByTagName('head')[0];
-          for (var i = 0; i <= 4; i++) {
-              link.removeChild(link.children[0]);
-          }
-          for (i = 0; i <= 1; i++) {
-              link.removeChild(link.children[1]);
-          }
-      },
+      /*      deleteCssAndJS: function() {
+                var link = document.getElementsByTagName('head')[0];
+                for (var i = 0; i <= 4; i++) {
+                    link.removeChild(link.children[0]);
+                }
+                for (i = 0; i <= 1; i++) {
+                    link.removeChild(link.children[1]);
+                }
+            },
 
-      addCssAndJs: function() {
-          var link = document.getElementsByTagName('head')[0];
-          var jqueryjs = link.children[0];
-          var moodjs = link.children[1];
-          var node;
-          for (css of audioCss) {
-              node = document.createElement('link');
-              node.rel = 'stylesheet';
-              node.href = css;
-              link.insertBefore(node, jqueryjs);
-          }
-          for (js of audioJs) {
-              node = document.createElement('script');
-              node.type = 'text/javascript';
-              node.src = js;
-              link.insertBefore(node, moodjs);
-          }
-          node = document.createElement('script');
-          node.type = 'text/javascript';
-          node.src = 'js/player.js';
-          link.appendChild(node);
+            addCssAndJs: function() {
+                var link = document.getElementsByTagName('head')[0];
+                var jqueryjs = link.children[0];
+                var moodjs = link.children[1];
+                var node;
+                for (css of audioCss) {
+                    node = document.createElement('link');
+                    node.rel = 'stylesheet';
+                    node.href = css;
+                    link.insertBefore(node, jqueryjs);
+                }
+                for (js of audioJs) {
+                    node = document.createElement('script');
+                    node.type = 'text/javascript';
+                    node.src = js;
+                    link.insertBefore(node, moodjs);
+                }
+                node = document.createElement('script');
+                node.type = 'text/javascript';
+                node.src = 'js/player.js';
+                link.appendChild(node);
 
-      }*/
+            }*/
 
 
   };
@@ -492,6 +495,25 @@
       }
 
   }
+
+  function returnMoodGround(event) {
+      console.log('test');
+      if (mode == 'play') {
+          if (document.all) {
+              window.event.returnValue = false;
+          } // for IE  
+          else {
+              event.preventDefault();
+          };
+          mode = 'draw';
+          $('#jp_container_1').fadeOut(1000);
+          $('#jquery_jplayer_1').fadeOut(10);
+          $('#moodGround').css("z-index", "1");
+          $('#moodGround').fadeTo("slow", 1);
+
+      }
+  }
+
   $(window).load(function() {
       // Create a simple drawing tool:
       var tool = new Tool();
