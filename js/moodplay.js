@@ -304,7 +304,7 @@
                         var v = Application.linlin(x, 0.0, 1.0, limits.vmin, limits.vmax);
                         var a = Application.linlin(y, 0.0, 1.0, limits.amin, limits.amax);
                         var uri = MOOD_URI + COORD_SERVICE + "?valence=" + v + "&arousal=" + a;
-                        this.sendRequest(uri, this.processMoodResponse);
+                        this.sendRequest(uri, this.);
                     }*/
       },
 
