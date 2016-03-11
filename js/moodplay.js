@@ -245,6 +245,7 @@
           var dict = jQuery.parseJSON(json);
           var mbid = dict[0].mbid.value;
           var path = dict[0].path.value;
+          // add basic info of song in 'musicArray'
           Application.sendRequest(MB_URI + mbid + "?inc=artist-credits&fmt=json", Application.processMBResponse);
           var uri = AUDIO_BASE_URI + path.replace(".wav", ".mp3");
           musicArray[musicArray.length - 1].setUri(uri);
@@ -304,7 +305,7 @@
                         var v = Application.linlin(x, 0.0, 1.0, limits.vmin, limits.vmax);
                         var a = Application.linlin(y, 0.0, 1.0, limits.amin, limits.amax);
                         var uri = MOOD_URI + COORD_SERVICE + "?valence=" + v + "&arousal=" + a;
-                        this.sendRequest(uri, this.);
+                        this.sendRequest(uri, this.processMoodResponse);
                     }*/
       },
 
