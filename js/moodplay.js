@@ -287,26 +287,25 @@
       sendSPARQLQuery: function(event) {
           if (!clicked)
               return;
-          // clear moodSet和markers
-          Application.clear();
+          //
           mode = 'play';
+          var s = new Song('1','2');
+          s.setUri('music/Iceloki - Entrance.mp3');
+          musicArray.push(s);
+
           $('#moodGround').css("z-index", "-1");
           $('#moodGround').fadeTo("slow", 0.4);
 
-          /*          Application.deleteCssAndJS();
-                    Application.addCssAndJs();*/
-
           $('#jp_container_1').fadeIn(1000);
-          $('#jquery_jplayer_1').fadeIn(10);
-          /*          window.location.href = "audioplayer.html";
-                    for (var mood of this.markers) {
-                        var x = mood.x / this.cw;
-                        var y = 1 - mood.y / this.ch;
-                        var v = Application.linlin(x, 0.0, 1.0, limits.vmin, limits.vmax);
-                        var a = Application.linlin(y, 0.0, 1.0, limits.amin, limits.amax);
-                        var uri = MOOD_URI + COORD_SERVICE + "?valence=" + v + "&arousal=" + a;
-                        this.sendRequest(uri, this.processMoodResponse);
-                    }*/
+          $('#jquery_jplayer_1').fadeIn(10,musicUriReady);
+/*          for (var mood of this.markers) {
+              var x = mood.x / this.cw;
+              var y = 1 - mood.y / this.ch;
+              var v = Application.linlin(x, 0.0, 1.0, limits.vmin, limits.vmax);
+              var a = Application.linlin(y, 0.0, 1.0, limits.amin, limits.amax);
+              var uri = MOOD_URI + COORD_SERVICE + "?valence=" + v + "&arousal=" + a;
+              this.sendRequest(uri, this.processMoodResponse);
+          }*/
       },
 
       linlin: function(val, inmin, inmax, outmin, outmax) {
@@ -364,6 +363,7 @@
           $("#artist").text("");
           moodSet.clear();
           this.markers.clear();
+          console.log('clear');
       },
 
       fadeTrack: function(path) {
@@ -416,7 +416,7 @@
       this.title = title_;
       this.artist = artist_;
       this.setUri = function(uri_) {
-          this.uri = uri_;
+          this.mp3 = uri_;
       }
   }
 
@@ -497,7 +497,7 @@
 
   }
 
-  function returnMoodGround(event) {
+/*  function returnMoodGround(event) {
       console.log('test');
       if (mode == 'play') {
           if (document.all) {
@@ -507,13 +507,14 @@
               event.preventDefault();
           };
           mode = 'draw';
+		      Application.clear();
           $('#jp_container_1').fadeOut(1000);
           $('#jquery_jplayer_1').fadeOut(10);
           $('#moodGround').css("z-index", "1");
           $('#moodGround').fadeTo("slow", 1);
 
       }
-  }
+  }*/
 
   $(window).load(function() {
       // Create a simple drawing tool:
@@ -532,6 +533,7 @@
 
       tool.onMouseDown = function(event) {
               musicArray = [];
+			  
               // If we produced a path before, deselect it:
               if (path) {
                   path.selected = false;
