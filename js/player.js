@@ -1,12 +1,15 @@
 var list;
+var parameterObject = {
+    jPlayer: "#jquery_jplayer_1",
+    cssSelectorAncestor: "#jp_container_1"
+};
 
 function musicUriReady() {
 
+    alert(musicArray.length);
     if (list == undefined) {
-        list = new jPlayerPlaylist({
-            jPlayer: "#jquery_jplayer_1",
-            cssSelectorAncestor: "#jp_container_1"
-        }, musicArray, {
+        alert('undefined');
+        list = new jPlayerPlaylist(parameterObject, musicArray, {
             swfPath: "../../dist/jplayer",
             supplied: "oga, mp3",
             wmode: "window",
@@ -15,8 +18,9 @@ function musicUriReady() {
             smoothPlayBar: true,
             keyEnabled: true
         });
-    } else{
-      list._initPlaylist(musicArray);
+    } else {
+        alert('defined');
+        list.setPlaylist(musicArray);
     }
 }
 
@@ -34,6 +38,7 @@ function returnMoodGround(event) {
         $('#jquery_jplayer_1').fadeOut(10);
         $('#moodGround').css("z-index", "1");
         $('#moodGround').fadeTo("slow", 1);
-
+        list.remove();
+        musicArray=[];
     }
 }
