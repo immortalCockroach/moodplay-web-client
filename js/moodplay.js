@@ -26,6 +26,7 @@
   var duration = 60;
 
   var moodSet = new Set();
+  var randomDisplayMood = new Set();
   var musicArray = [];
   paper.install(window);
   var trackNumber = 10;
@@ -85,6 +86,7 @@
           this.canvas.height = this.ch;
           this.label = document.getElementById('label');
           this.draw();
+          this.showRandomMoods();
           this.lastClick = new Date();
 
           window.onresize = function() {
@@ -167,9 +169,9 @@
                   //ctx.fillRect(x, y, xstep + 1, ystep + 1);
                   var rectangle = new Rectangle(new Point(x, y), new Size(xstep + 1, ystep + 1));
                   var pathr = new Path.Rectangle(rectangle);
-                  var color = new Color(color.r / 256, color.g / 256, color.b / 256);
+                  var newcolor = new Color(color.r / 256, color.g / 256, color.b / 256);
                   pathr.style = {
-                      fillColor: color
+                      fillColor: newcolor
                   };
 
               }
@@ -215,6 +217,73 @@
           moodText.justification = 'center';
           textArray.push(moodText);
       },
+
+      showRandomMoods: function() {
+          this.generateRandomSerial();
+          var mood, text, x, y;
+          for (var i of randomDisplayMood) {
+              mood = this.moods[i];
+              text = mood[0];
+              x = mood[1];
+              y = mood[2];
+              this.drawRandomMood(text, x * this.cw, (1 - y) * this.ch);
+          }
+      },
+
+      drawRandomMood: function(text, x, y) {
+          var myCircle = new Path.Circle(new Point(x, y), 12);
+          var randR = Math.random();
+          var randG = Math.random();
+          var randB = Math.random();
+          var newcolor = new Color(randR, randG, randB);
+          myCircle.fillColor = newcolor;
+          myCircle.opacity = 0.5;
+          var moodText;
+          var ctx = this.canvas.getContext("2d");
+          this.textLength = ctx.measureText(text);
+          if (y < this.ch / 2) {
+              if (x < this.textLength.width / 2) {
+                  //ctx.fillText(this.marker.title, this.marker.x + this.textLength.width / 2, this.marker.y + 35);
+                  moodText = new PointText(new Point(x + this.textLength.width / 2, y + 35));
+              } else if (x > this.cw - this.textLength.width / 2) {
+                  //ctx.fillText(this.marker.title, this.marker.x - this.textLength.width / 2, this.marker.y + 35);
+                  moodText = new PointText(new Point(x - this.textLength.width / 2, y + 35));
+
+              } else {
+                  //ctx.fillText(this.marker.title, this.marker.x, this.marker.y + 35);
+                  moodText = new PointText(new Point(x, y + 35));
+              }
+          } else {
+              if (x < this.textLength.width / 2) {
+                  //ctx.fillText(this.marker.title, this.marker.x + this.textLength.width / 2, this.marker.y - 25);
+                  moodText = new PointText(new Point(x + this.textLength.width / 2, y - 25));
+              } else if (x > this.cw - this.textLength.width / 2) {
+                  //ctx.fillText(this.marker.title, this.marker.x - this.textLength.width / 2, this.marker.y - 25);
+                  moodText = new PointText(new Point(x - this.textLength.width / 2, y - 25));
+              } else {
+                  //ctx.fillText(this.marker.title, this.marker.x, this.marker.y - 25);
+                  moodText = new PointText(new Point(x, y - 25));
+              }
+          }
+          moodText.content = text;
+          moodText.fillColor = 'white';
+          moodText.fontFamily = 'Arial';
+          moodText.fontSize = '10px';
+          moodText.justification = 'center';
+      },
+
+      generateRandomSerial: function() {
+          var moodsLen = this.moods.length;
+          var generateNum = parseInt(moodsLen / 4);
+          while (randomDisplayMood.size < generateNum) {
+              var randomNum = Math.round((moodsLen - 0) * Math.random());
+              if (!randomDisplayMood.has(randomNum)) {
+                  randomDisplayMood.add(randomNum);
+              }
+          }
+          //alert("generateOk"+randomDisplayMood.size);
+      },
+
       sendRequest: function(uri, callback) {
           var request = new XMLHttpRequest();
           request.open('GET', uri, true);
@@ -289,7 +358,7 @@
               return;
           //
           mode = 'play';
-          var s = new Song('1','2');
+          var s = new Song('1', '2');
           s.setUri('music/Iceloki - Entrance.mp3');
           musicArray.push(s);
 
@@ -297,15 +366,15 @@
           $('#moodGround').fadeTo("slow", 0.4);
 
           $('#jp_container_1').fadeIn(1000);
-          $('#jquery_jplayer_1').fadeIn(10,musicUriReady);
-/*          for (var mood of this.markers) {
-              var x = mood.x / this.cw;
-              var y = 1 - mood.y / this.ch;
-              var v = Application.linlin(x, 0.0, 1.0, limits.vmin, limits.vmax);
-              var a = Application.linlin(y, 0.0, 1.0, limits.amin, limits.amax);
-              var uri = MOOD_URI + COORD_SERVICE + "?valence=" + v + "&arousal=" + a;
-              this.sendRequest(uri, this.processMoodResponse);
-          }*/
+          $('#jquery_jplayer_1').fadeIn(10, musicUriReady);
+          /*          for (var mood of this.markers) {
+                        var x = mood.x / this.cw;
+                        var y = 1 - mood.y / this.ch;
+                        var v = Application.linlin(x, 0.0, 1.0, limits.vmin, limits.vmax);
+                        var a = Application.linlin(y, 0.0, 1.0, limits.amin, limits.amax);
+                        var uri = MOOD_URI + COORD_SERVICE + "?valence=" + v + "&arousal=" + a;
+                        this.sendRequest(uri, this.processMoodResponse);
+                    }*/
       },
 
       linlin: function(val, inmin, inmax, outmin, outmax) {
@@ -362,6 +431,7 @@
           $("#title").text("");
           $("#artist").text("");
           moodSet.clear();
+          //randomDisplayMood.clear();
           this.markers.clear();
           console.log('clear');
       },
@@ -497,24 +567,24 @@
 
   }
 
-/*  function returnMoodGround(event) {
-      console.log('test');
-      if (mode == 'play') {
-          if (document.all) {
-              window.event.returnValue = false;
-          } // for IE  
-          else {
-              event.preventDefault();
-          };
-          mode = 'draw';
-		      Application.clear();
-          $('#jp_container_1').fadeOut(1000);
-          $('#jquery_jplayer_1').fadeOut(10);
-          $('#moodGround').css("z-index", "1");
-          $('#moodGround').fadeTo("slow", 1);
+  /*  function returnMoodGround(event) {
+        console.log('test');
+        if (mode == 'play') {
+            if (document.all) {
+                window.event.returnValue = false;
+            } // for IE  
+            else {
+                event.preventDefault();
+            };
+            mode = 'draw';
+            Application.clear();
+            $('#jp_container_1').fadeOut(1000);
+            $('#jquery_jplayer_1').fadeOut(10);
+            $('#moodGround').css("z-index", "1");
+            $('#moodGround').fadeTo("slow", 1);
 
-      }
-  }*/
+        }
+    }*/
 
   $(window).load(function() {
       // Create a simple drawing tool:
@@ -533,7 +603,7 @@
 
       tool.onMouseDown = function(event) {
               musicArray = [];
-			  
+
               // If we produced a path before, deselect it:
               if (path) {
                   path.selected = false;
