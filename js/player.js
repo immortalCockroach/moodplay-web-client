@@ -6,9 +6,9 @@ var parameterObject = {
 
 function musicUriReady() {
 
-    alert(musicArray.length);
+    //alert(musicArray.length);
     if (list == undefined) {
-        alert('undefined');
+        //alert('undefined');
         list = new jPlayerPlaylist(parameterObject, musicArray, {
             swfPath: "../../dist/jplayer",
             supplied: "oga, mp3",
@@ -19,7 +19,7 @@ function musicUriReady() {
             keyEnabled: true
         });
     } else {
-        alert('defined');
+        //alert('defined');
         list.setPlaylist(musicArray);
     }
 }
