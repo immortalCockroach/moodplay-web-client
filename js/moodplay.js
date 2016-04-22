@@ -76,6 +76,29 @@
           ['happy', 0.92, 0.52, 0, 0],
           ['upbeat', 0.91, 0.55, 0, 0]
       ],
+      songs: [
+          ['music/1/ACDC - Evil Walks.mp3', 0.875, 0.875, 'Evil Walks', 'AC/DC'],
+          ['music/1/Fall Out Boy - Immortals - End Credit版.mp3', 0.625, 0.875, 'Immortals', 'Fall Out Boy'],
+          ['music/1/My Chemical Romance - Na Na Na(Na Na Na Na Na Na Na Na Na) - 单曲.mp3', 0.625, 0.625, 'UNKNOWN', 'UNKNOWN'],
+          ['music/1/Oasis - Stop Crying Your Heart Out.mp3', 0.875, 0.625, 'Stop Crying Your Heart Out', 'Oasis'],
+          ['music/1/Iceloki - Entrance.mp3', 0.75, 0.75, 'Entrance', 'Iceloki'],
+          ['music/2/Avril Lavigne - Fly.mp3', 0.375, 0.875, 'UNKNOWN', 'UNKNOWN'],
+          ['music/2/Linkin Park - in the End.mp3', 0.125, 0.875, 'in the End', 'Linkin Park'],
+          ['music/2/Mariah Carey - Hero.mp3', 0.125, 0.625, 'Hero', 'Mariah Carey'],
+          ['music/2/戴佩妮 - 辛德瑞拉.mp3', 0.375, 0.625, '辛德瑞拉', '戴佩妮'],
+          ['music/2/Ani - Biotonic.mp3', 0.25, 0.75, 'Biotonic', 'Ani'],
+          ['music/3/Led Zeppelin - In the Light.mp3', 0.375, 0.375, 'In the Light', 'Led Zeppelin'],
+          ['music/3/Taylor Swift - State Of Grace.mp3', 0.125, 0.375, 'State Of Grace', 'Taylor Swift'],
+          ['music/3/Taylor Swift - The Moment I Knew.mp3', 0.125, 0.125, 'The Moment I Knew', 'Taylor Swift'],
+          ['music/3/曲婉婷 - 快活.mp3', 0.375, 0.125 , '快活', '曲婉婷'],
+          ['music/3/V.K克 - Wings Of Piano.mp3', 0.25, 0.25, 'Wings Of Piano', 'V.K克'],
+          ['music/4/George Ezra - Bust.mp3', 0.875, 0.375, 'Bust', 'George Ezra'],
+          ['music/4/容祖儿 - 花千树.mp3', 0.625, 0.375, '花千树', '容祖儿'],
+          ['music/4/宋冬野 - 斑马,斑马.mp3', 0.625, 0.125, '斑马,斑马', '宋冬野'],
+          ['music/4/周杰伦 - 明明就.mp3', 0.875, 0.125 , '明明就', '周杰伦'],
+          ['music/4/Rabpit - Sanctity.mp3', 0.75, 0.25, 'Sanctity', 'Rabpit']
+      ],
+
       init: function() {
           mode = 'draw';
           this.is_touch_device = 'ontouchstart' in document.documentElement;
