@@ -25,7 +25,7 @@
   var offset = 30;
   var duration = 60;
 
-  var moodSet = new Set();
+  var songSet = new Set();
   var randomDisplayMood = new Set();
   var musicArray = [];
   paper.install(window);
@@ -90,12 +90,12 @@
           ['music/3/Led Zeppelin - In the Light.mp3', 0.375, 0.375, 'In the Light', 'Led Zeppelin'],
           ['music/3/Taylor Swift - State Of Grace.mp3', 0.125, 0.375, 'State Of Grace', 'Taylor Swift'],
           ['music/3/Taylor Swift - The Moment I Knew.mp3', 0.125, 0.125, 'The Moment I Knew', 'Taylor Swift'],
-          ['music/3/曲婉婷 - 快活.mp3', 0.375, 0.125 , '快活', '曲婉婷'],
+          ['music/3/曲婉婷 - 快活.mp3', 0.375, 0.125, '快活', '曲婉婷'],
           ['music/3/V.K克 - Wings Of Piano.mp3', 0.25, 0.25, 'Wings Of Piano', 'V.K克'],
           ['music/4/George Ezra - Bust.mp3', 0.875, 0.375, 'Bust', 'George Ezra'],
           ['music/4/容祖儿 - 花千树.mp3', 0.625, 0.375, '花千树', '容祖儿'],
           ['music/4/宋冬野 - 斑马,斑马.mp3', 0.625, 0.125, '斑马,斑马', '宋冬野'],
-          ['music/4/周杰伦 - 明明就.mp3', 0.875, 0.125 , '明明就', '周杰伦'],
+          ['music/4/周杰伦 - 明明就.mp3', 0.875, 0.125, '明明就', '周杰伦'],
           ['music/4/Rabpit - Sanctity.mp3', 0.75, 0.25, 'Sanctity', 'Rabpit']
       ],
 
@@ -381,9 +381,9 @@
               return;
           //
           mode = 'play';
-          var s = new Song('1', '2');
+/*          var s = new Song('1', '2');
           s.setUri('music/Iceloki - Entrance.mp3');
-          musicArray.push(s);
+          musicArray.push(s);*/
 
           $('#moodGround').css("z-index", "-1");
           $('#moodGround').fadeTo("slow", 0.4);
@@ -408,15 +408,19 @@
 
       setMarker: function(pX, pY) {
           this.marker = {
-              title: 'null'
+              title: 'null',
+              songUri: 'null'
           };
 
           this.label.innerHTML = 'Click to send';
           this.marker.title = this.findMood(pX / this.cw, 1 - pY / this.ch);
-          // Notice:当mood之前未出现时加入集合,此处markers中的Marker的x,y没有经过转换,之后需要转换
-          if (!moodSet.has(this.marker.title)) {
-              moodSet.add(this.marker.title);
-              this.markers.add(new Marker(pX, pY, this.marker.title));
+          var song  = this.findSong(pX / this.cw, 1 - pY / this.ch);
+          this.marker.songUri = song.mp3;
+              // Notice:当mood之前未出现时加入集合,此处markers中的Marker的x,y没有经过转换,之后需要转换
+          if(!songSet.has(this.marker.songUri)) {
+              musicArray.push(song);
+              songSet.add(this.marker.songUri);
+              this.markers.add(new Marker(pX, pY, this.marker.songUri));
           }
       },
 
@@ -439,6 +443,27 @@
           return this.moods[index][0];
       },
 
+      findSong: function(x,y){
+          var distance = 1;
+          var index;
+          for (var i = 0; i < this.songs.length; i++) {
+              var song = this.songs[i];
+              var dx = Math.abs(song[1] - x);
+              var dy = Math.abs(song[2] - y);
+              var d = Math.sqrt(dx * dx + dy * dy);
+
+              if (d < distance) {
+                  distance = d;
+                  index = i;
+              }
+          }
+
+          var result = new Song(this.songs[index][3],this.songs[index][4]);
+          result.setUri(this.songs[index][0]);
+          return result;
+          
+      },
+
       setNoOfTracks: function() {
           var num = parseInt(document.getElementById('noOfTracks').value);
           if (isNaN(num) || num <= 0) {
@@ -453,7 +478,7 @@
           $("#filename").text("");
           $("#title").text("");
           $("#artist").text("");
-          moodSet.clear();
+          songSet.clear();
           //randomDisplayMood.clear();
           this.markers.clear();
           console.log('clear');
