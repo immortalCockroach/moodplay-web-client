@@ -26,6 +26,8 @@ function musicUriReady() {
 
 function returnMoodGround(event) {
     if (mode == 'play') {
+
+        // forbid the right click of context menu
         if (document.all) {
             window.event.returnValue = false;
         } // for IE  
@@ -34,6 +36,8 @@ function returnMoodGround(event) {
         };
         mode = 'draw';
         Application.clear();
+
+        // clear the information of play list and jump back to background
         $('#jp_container_1').fadeOut(1000);
         $('#jquery_jplayer_1').fadeOut(10);
         $('#moodGround').css("z-index", "1");

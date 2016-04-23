@@ -79,10 +79,10 @@
       songs: [
           ['music/1/ACDC - Evil Walks.mp3', 0.875, 0.875, 'Evil Walks', 'AC/DC'],
           ['music/1/Fall Out Boy - Immortals - End Credit版.mp3', 0.625, 0.875, 'Immortals', 'Fall Out Boy'],
-          ['music/1/My Chemical Romance - Na Na Na(Na Na Na Na Na Na Na Na Na) - 单曲.mp3', 0.625, 0.625, 'UNKNOWN', 'UNKNOWN'],
+          ['music/1/My Chemical Romance - Na Na Na(Na Na Na Na Na Na Na Na Na) - 单曲.mp3', 0.625, 0.625, 'Na Na Na(Na Na Na Na Na Na Na Na Na)', 'My Chemical Romance'],
           ['music/1/Oasis - Stop Crying Your Heart Out.mp3', 0.875, 0.625, 'Stop Crying Your Heart Out', 'Oasis'],
           ['music/1/Iceloki - Entrance.mp3', 0.75, 0.75, 'Entrance', 'Iceloki'],
-          ['music/2/Avril Lavigne - Fly.mp3', 0.375, 0.875, 'UNKNOWN', 'UNKNOWN'],
+          ['music/2/Avril Lavigne - Fly.mp3', 0.375, 0.875, 'Fly', 'Avril Lavigne'],
           ['music/2/Linkin Park - in the End.mp3', 0.125, 0.875, 'in the End', 'Linkin Park'],
           ['music/2/Mariah Carey - Hero.mp3', 0.125, 0.625, 'Hero', 'Mariah Carey'],
           ['music/2/戴佩妮 - 辛德瑞拉.mp3', 0.375, 0.625, '辛德瑞拉', '戴佩妮'],
@@ -246,6 +246,7 @@
           var mood, text, x, y;
           for (var i of randomDisplayMood) {
               mood = this.moods[i];
+              // the text of mood and it's x,y coordinates
               text = mood[0];
               x = mood[1];
               y = mood[2];
@@ -253,8 +254,10 @@
           }
       },
 
+      // draw random mood with text and x,y coordinates
       drawRandomMood: function(text, x, y) {
           var myCircle = new Path.Circle(new Point(x, y), 12);
+          // generate random RGB color
           var randR = Math.random();
           var randG = Math.random();
           var randB = Math.random();
@@ -295,6 +298,8 @@
           moodText.justification = 'center';
       },
 
+
+      // generate random numbers 
       generateRandomSerial: function() {
           var moodsLen = this.moods.length;
           var generateNum = parseInt(moodsLen / 4);
@@ -379,12 +384,8 @@
       sendSPARQLQuery: function(event) {
           if (!clicked)
               return;
-          //
           mode = 'play';
-/*          var s = new Song('1', '2');
-          s.setUri('music/Iceloki - Entrance.mp3');
-          musicArray.push(s);*/
-
+          // switch to the playing list
           $('#moodGround').css("z-index", "-1");
           $('#moodGround').fadeTo("slow", 0.4);
 
@@ -413,17 +414,19 @@
           };
 
           this.label.innerHTML = 'Click to send';
+          // find mood and song
           this.marker.title = this.findMood(pX / this.cw, 1 - pY / this.ch);
-          var song  = this.findSong(pX / this.cw, 1 - pY / this.ch);
+          var song = this.findSong(pX / this.cw, 1 - pY / this.ch);
           this.marker.songUri = song.mp3;
-              // Notice:当mood之前未出现时加入集合,此处markers中的Marker的x,y没有经过转换,之后需要转换
-          if(!songSet.has(this.marker.songUri)) {
+          // Notice:add song to the Set with no-repeatition
+          if (!songSet.has(this.marker.songUri)) {
               musicArray.push(song);
               songSet.add(this.marker.songUri);
               this.markers.add(new Marker(pX, pY, this.marker.songUri));
           }
       },
 
+      // find nearest mood with nearest neighbour search
       findMood: function(x, y) {
           var distance = 1;
           var index = null;
@@ -434,6 +437,7 @@
               var dy = Math.abs(mood[2] - y);
               var d = Math.sqrt(dx * dx + dy * dy);
 
+              // get the index of minimum distance between point and mood
               if (d < distance) {
                   distance = d;
                   index = i;
@@ -443,7 +447,8 @@
           return this.moods[index][0];
       },
 
-      findSong: function(x,y){
+      // find nearest music with nearest neighbour search
+      findSong: function(x, y) {
           var distance = 1;
           var index;
           for (var i = 0; i < this.songs.length; i++) {
@@ -451,17 +456,17 @@
               var dx = Math.abs(song[1] - x);
               var dy = Math.abs(song[2] - y);
               var d = Math.sqrt(dx * dx + dy * dy);
-
+              // get the index of minimum distance between point and song
               if (d < distance) {
                   distance = d;
                   index = i;
               }
           }
 
-          var result = new Song(this.songs[index][3],this.songs[index][4]);
+          var result = new Song(this.songs[index][3], this.songs[index][4]);
           result.setUri(this.songs[index][0]);
           return result;
-          
+
       },
 
       setNoOfTracks: function() {
@@ -479,7 +484,6 @@
           $("#title").text("");
           $("#artist").text("");
           songSet.clear();
-          //randomDisplayMood.clear();
           this.markers.clear();
           console.log('clear');
       },
@@ -492,42 +496,6 @@
           $("#title").text(title);
           $("#artist").text(artist);
       }
-
-      /*      deleteCssAndJS: function() {
-                var link = document.getElementsByTagName('head')[0];
-                for (var i = 0; i <= 4; i++) {
-                    link.removeChild(link.children[0]);
-                }
-                for (i = 0; i <= 1; i++) {
-                    link.removeChild(link.children[1]);
-                }
-            },
-
-            addCssAndJs: function() {
-                var link = document.getElementsByTagName('head')[0];
-                var jqueryjs = link.children[0];
-                var moodjs = link.children[1];
-                var node;
-                for (css of audioCss) {
-                    node = document.createElement('link');
-                    node.rel = 'stylesheet';
-                    node.href = css;
-                    link.insertBefore(node, jqueryjs);
-                }
-                for (js of audioJs) {
-                    node = document.createElement('script');
-                    node.type = 'text/javascript';
-                    node.src = js;
-                    link.insertBefore(node, moodjs);
-                }
-                node = document.createElement('script');
-                node.type = 'text/javascript';
-                node.src = 'js/player.js';
-                link.appendChild(node);
-
-            }*/
-
-
   };
 
   function Song(title_, artist_) {
@@ -615,25 +583,6 @@
 
   }
 
-  /*  function returnMoodGround(event) {
-        console.log('test');
-        if (mode == 'play') {
-            if (document.all) {
-                window.event.returnValue = false;
-            } // for IE  
-            else {
-                event.preventDefault();
-            };
-            mode = 'draw';
-            Application.clear();
-            $('#jp_container_1').fadeOut(1000);
-            $('#jquery_jplayer_1').fadeOut(10);
-            $('#moodGround').css("z-index", "1");
-            $('#moodGround').fadeTo("slow", 1);
-
-        }
-    }*/
-
   $(window).load(function() {
       // Create a simple drawing tool:
       var tool = new Tool();
@@ -683,6 +632,7 @@
       tool.onMouseDrag = function(event) {
           if (!isNaN(trackNumber) && trackNumber >= 2) {
               path.add(event.point);
+              // smooth the path
               path.smooth({
                   type: 'geometric',
                   factor: 0.4
@@ -708,12 +658,7 @@
                   alert('Tracks number is wrong,please reset it.');
                   return;
               }
-              //alert(len);
-              //alert(parseInt(3.5));
-              //var segmentCount = path.segments.length;
 
-              // When the mouse is released, simplify it:
-              //alert(len/split);
               if (trackNumber >= 3) {
                   path.flatten(parseInt(len / (trackNumber - 2)));
               } else {
@@ -733,31 +678,5 @@
               var pointOfSeg = array[i].point;
               Application.MouseUp(pointOfSeg.x, pointOfSeg.y, circleArray, textArray);
           }
-
-          //之后将清空和跳转写成回调函数 请求音乐完成后回调
-
-          /*          var circleArrayLength = circleArray.length;
-                    if (circleArrayLength > 0) {
-                        for (var j = 0; j <= circleArrayLength - 1; j++) {
-                            circleArray[j].remove();
-                            textArray[j].remove();
-                        }
-                    }
-                    circleArray = [];
-                    textArray = [];*/
-
-
-          /*          $("#moodGround").fadeOut(1000);
-                    var node = document.createElement('link');
-                    node.rel = 'stylesheet';
-                    node.href = 'css/reset.css';
-                    var head = document.getElementsByTagName('head')[0];
-                    head.removeChild(head.children[1]);
-                    head.insertBefore(node, head.children[1]);
-                    $("#musicPlayer").fadeIn(2000);*/
-          /*var newSegmentCount = path.segments.length;
-          var difference = segmentCount - newSegmentCount;
-          var percentage = 100 - Math.round(newSegmentCount / segmentCount * 100);
-          textItem.content = difference + ' of the ' + segmentCount + ' segments were removed. Saving ' + percentage + '%';*/
       }
   });
