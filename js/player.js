@@ -43,6 +43,5 @@ function returnMoodGround(event) {
         $('#moodGround').css("z-index", "1");
         $('#moodGround').fadeTo("slow", 1);
         list.remove();
-        musicArray=[];
     }
 }
