@@ -31,6 +31,11 @@
   paper.install(window);
   var trackNumber = 10;
   var mode;
+
+  var circleArray = [];
+  var textArray = [];
+  var path;
+  var transparentPath;
   /*  var audioJs = ['js/jquery.jplayer.min.js', 'js/jplayer.playlist.min.js'];
     var audioCss = ['css/jplayer.blue.monday.css'];*/
 
@@ -109,7 +114,7 @@
           this.canvas.height = this.ch;
           this.label = document.getElementById('label');
           this.draw();
-          this.showRandomMoods();
+          //this.showRandomMoods();
           this.lastClick = new Date();
 
           window.onresize = function() {
@@ -242,28 +247,45 @@
       },
 
       showRandomMoods: function() {
-          this.generateRandomSerial();
+          this.clear(Application.generateRandomSerial);
+          if (!clicked)
+              clicked = true;
           var mood, text, x, y;
           for (var i of randomDisplayMood) {
-              mood = this.moods[i];
+              mood = Application.moods[i];
               // the text of mood and it's x,y coordinates
               text = mood[0];
               x = mood[1];
               y = mood[2];
-              this.drawRandomMood(text, x * this.cw, (1 - y) * this.ch);
+              //alert(i + ' ' + mood);
+              this.drawRandomMood(text, x * this.cw, (1 - y) * this.ch, circleArray, textArray);
+
+              this.marker = {
+                  title: 'null',
+                  songUri: 'null'
+              };
+
+              var song = this.findSong(x, y);
+              this.marker.songUri = song.mp3;
+              // Notice:add song to the Set with no-repeatition
+              if (!songSet.has(this.marker.songUri)) {
+                  musicArray.push(song);
+                  songSet.add(this.marker.songUri);
+                  this.markers.add(new Marker(x * this.cw, (1 - y) * this.ch, this.marker.songUri));
+              }
+
+              //alert('draw ok');
           }
+          this.label.innerHTML = 'Click to send';
       },
 
       // draw random mood with text and x,y coordinates
-      drawRandomMood: function(text, x, y) {
-          var myCircle = new Path.Circle(new Point(x, y), 12);
+      drawRandomMood: function(text, x, y, circleArray, textArray) {
+          var myCircle = new Path.Circle(new Point(x, y), 20);
           // generate random RGB color
-          var randR = Math.random();
-          var randG = Math.random();
-          var randB = Math.random();
-          var newcolor = new Color(randR, randG, randB);
-          myCircle.fillColor = newcolor;
+          myCircle.fillColor = 'black';
           myCircle.opacity = 0.5;
+          circleArray.push(myCircle);
           var moodText;
           var ctx = this.canvas.getContext("2d");
           this.textLength = ctx.measureText(text);
@@ -294,14 +316,16 @@
           moodText.content = text;
           moodText.fillColor = 'white';
           moodText.fontFamily = 'Arial';
-          moodText.fontSize = '10px';
+          moodText.fontSize = '16px';
           moodText.justification = 'center';
+          textArray.push(moodText);
       },
+
 
 
       // generate random numbers 
       generateRandomSerial: function() {
-          var moodsLen = this.moods.length;
+          var moodsLen = Application.moods.length;
           var generateNum = parseInt(moodsLen / 4);
           while (randomDisplayMood.size < generateNum) {
               var randomNum = Math.round((moodsLen - 0) * Math.random());
@@ -309,7 +333,7 @@
                   randomDisplayMood.add(randomNum);
               }
           }
-          //alert("generateOk"+randomDisplayMood.size);
+          //alert("generateOk" + randomDisplayMood.size);
       },
 
       sendRequest: function(uri, callback) {
@@ -479,17 +503,42 @@
           }
       },
 
-      clear: function() {
+      clear: function(callback) {
           $("#filename").text("");
           $("#title").text("");
           $("#artist").text("");
           songSet.clear();
+          clicked = false;
+          randomDisplayMood.clear();
           this.markers.clear();
-          console.log('clear');
+          this.clearCircleAndText();
+          this.clearPath();
+          musicArray = [];
+          //alert('clear');
+          if (callback != undefined) {
+              callback();
+          }
       },
 
       fadeTrack: function(path) {
           $("#filename").text(path);
+      },
+
+      clearCircleAndText: function() {
+          var circleArrayLength = circleArray.length;
+          for (var j = 0; j <= circleArrayLength - 1; j++) {
+              circleArray[j].remove();
+              textArray[j].remove();
+          }
+          circleArray = [];
+          textArray = [];
+      },
+      clearPath: function() {
+          if (path) {
+              path.selected = false;
+              path.remove();
+              transparentPath.remove();
+          }
       },
 
       showMetadata: function(title, artist) {
@@ -586,10 +635,8 @@
   $(window).load(function() {
       // Create a simple drawing tool:
       var tool = new Tool();
-      var path;
-      var transparentPath;
-      var circleArray = [];
-      var textArray = [];
+
+
       // Define a mousedown and mousedrag handler
 
       /*    var textItem = new PointText({
@@ -599,21 +646,10 @@
           });*/
 
       tool.onMouseDown = function(event) {
-              musicArray = [];
 
               // If we produced a path before, deselect it:
-              if (path) {
-                  path.selected = false;
-                  path.remove();
-                  transparentPath.remove();
-                  var circleArrayLength = circleArray.length;
-                  for (var j = 0; j <= circleArrayLength - 1; j++) {
-                      circleArray[j].remove();
-                      textArray[j].remove();
-                  }
-                  circleArray = [];
-                  textArray = [];
-              }
+              Application.clear();
+
 
               // Create a new path and set its stroke color to black:
               path = new Path({
