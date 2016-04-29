@@ -1,6 +1,5 @@
 #moodplay-web-client
 
-***
 
 *moodplay-web-client* is a simple online webplayer according to your **mood**.
 You can draw a line throw the colored background and click **send** button to jump to a music player page,
